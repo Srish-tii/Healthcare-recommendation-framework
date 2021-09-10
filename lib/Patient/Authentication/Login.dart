@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Patient/Authentication/register.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
+
+import 'Register.dart';
 //  --------------------------- Log in page ---------------------------------
 class Login extends StatelessWidget{
   final  _formKey = GlobalKey<FormState>();

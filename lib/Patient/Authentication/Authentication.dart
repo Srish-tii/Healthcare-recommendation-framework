@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Patient/Authentication/Login.dart';
-import 'package:rastreador/Patient/Authentication/register.dart';
+
+import 'Register.dart';
 
 class Authentication extends StatefulWidget{
   @override

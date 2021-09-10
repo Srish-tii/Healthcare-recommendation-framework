@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:rastreador/Patient/Authentication/Register.dart';
 import 'package:rastreador/Patient/PatientHome/ActivitiesFinished.dart';
 import 'package:rastreador/Patient/PatientHome/Feedback.dart';
 import 'package:rastreador/Patient/PatientHome/Progress.dart';
@@ -15,6 +14,10 @@ class PatientProfile extends StatefulWidget {
 }
 class Patient extends State<PatientProfile>{
   @override
+  Widget build(BuildContext context) {
+    return Text("TODO");
+  }
+ /* @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Patient Profile'),),
@@ -58,7 +61,9 @@ class Patient extends State<PatientProfile>{
         ),
       ),
 // --------------------------------- The body of patient page --------------------------------------
-      body : SafeArea(
+      body :
+
+      SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all((20.0)),
@@ -129,16 +134,18 @@ class Patient extends State<PatientProfile>{
                     child: Text("Feedback"),
                   ),
                       SizedBox(width: 30,),
-                     Row (
+                  *//*   Row (
                          mainAxisAlignment : MainAxisAlignment.center ,
                          children :[
                       Text ('hi'),
-        ],),],),
+        ],),*//*
+                      ],),
             ),
           ),
         ),
       ),);
-  }}
+  }*/
+}
 
 /*  var auth;
                 final UserCredential user = (await auth.currentUser) as UserCredential;
