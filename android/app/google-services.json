@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "790373868049",
+    "firebase_url": "https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "patient-tracking-34e27",
+    "storage_bucket": "patient-tracking-34e27.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790373868049:android:505eeff746f0236b3807b0",
+        "android_client_info": {
+          "package_name": "com.example.patient_tacker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790373868049-nkbbm01ne31rp7ulb1qse1ccjaa5bnmq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhg9X7nQxJ-vulzUnTPbksOoQ9N78_EnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790373868049-nkbbm01ne31rp7ulb1qse1ccjaa5bnmq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790373868049:android:5749bf2003b84f853807b0",
+        "android_client_info": {
+          "package_name": "com.example.rastreador"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790373868049-nkbbm01ne31rp7ulb1qse1ccjaa5bnmq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhg9X7nQxJ-vulzUnTPbksOoQ9N78_EnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790373868049-nkbbm01ne31rp7ulb1qse1ccjaa5bnmq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790373868049:android:e8eb54ec1d4102d73807b0",
+        "android_client_info": {
+          "package_name": "com.exemple.caregiver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790373868049-nkbbm01ne31rp7ulb1qse1ccjaa5bnmq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhg9X7nQxJ-vulzUnTPbksOoQ9N78_EnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790373868049-nkbbm01ne31rp7ulb1qse1ccjaa5bnmq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
