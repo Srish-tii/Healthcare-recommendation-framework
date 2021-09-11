@@ -10,7 +10,6 @@ class Register extends StatelessWidget{
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
-  final _emailController = TextEditingController();
   late bool  valuefirst = true ;
   late bool valuesecond = false ;
  // Gender? _sexe = Gender.female ;
@@ -148,7 +147,6 @@ class Register extends StatelessWidget{
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
-                      controller: _emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Enter your Email';
@@ -199,23 +197,11 @@ class Register extends StatelessWidget{
                     ),),
                   SizedBox(height: 10),
                   MaterialButton(
-                      onPressed: () async {
-                      //  if(_fromKey.currentState!.validate()){
+                      onPressed: (){
+                        if(_fromKey.currentState!.validate()){
                           // ignore: unnecessary_statements
-                          List<String> data = [];
-                          String pass = _pwdController.text;
-                          String email = _emailController.text;
-                          data.add(pass);
-                          data.add( email);
-                          http.Response res = await createPatient(data) ;
-                          if(res.statusCode == 200) {
-                            // todo re-orientation vers l'espace patient
-                          }
-                           else {
-                             // afficher un message d'erreur avec res.body
-                          }
-                          print(res.body);
-                      //  }
+                            createPatient ;
+                        }
                       },
                       height: 50,
                       minWidth: double.infinity,
@@ -271,19 +257,17 @@ class Register extends StatelessWidget{
   }
 }
 // --------------------- Sending Data To server -------------------
-Future<http.Response> createPatient(List<String> data) {
-  print("during");
-
+Future<http.Response> createPatient(String data) {
   return http.post(
-    Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+    Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>
     {
-      "pass" : data[0],
-      "email" : data[1],
+      "address" : " ",
       "age" : " ",
+      "email" : " ",
       "first name" : " ",
       "gender" : " ",
       "id_activity" : " ",

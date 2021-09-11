@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rastreador/Patient/Authentication/Register.dart';
 import 'package:rastreador/Patient/PatientHome/ActivitiesFinished.dart';
 import 'package:rastreador/Patient/PatientHome/Feedback.dart';
 import 'package:rastreador/Patient/PatientHome/Progress.dart';
@@ -14,10 +15,6 @@ class PatientProfile extends StatefulWidget {
 }
 class Patient extends State<PatientProfile>{
   @override
-  Widget build(BuildContext context) {
-    return Text("TODO");
-  }
- /* @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Patient Profile'),),
@@ -61,9 +58,7 @@ class Patient extends State<PatientProfile>{
         ),
       ),
 // --------------------------------- The body of patient page --------------------------------------
-      body :
-
-      SafeArea(
+      body : SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all((20.0)),
@@ -132,35 +127,19 @@ class Patient extends State<PatientProfile>{
                       MaterialPageRoute(builder: (context)=> PatientFeedback()));
                   },
                     child: Text("Feedback"),
-                  ),
+                  ),],),
                       SizedBox(width: 30,),
-                  *//*   Row (
+                     Row (
                          mainAxisAlignment : MainAxisAlignment.center ,
                          children :[
-                      Text ('hi'),
-        ],),*//*
-                      ],),
-            ),
-          ),
+                      Text ('Update your personal information '),
+                       TextButton(onPressed: () {Navigator.push(context,
+                               MaterialPageRoute(builder: (context)=> Register()));
+                           },
+                         child: Text ('Update information'),
+                         ),],),
+         ], ),
         ),
-      ),);
-  }*/
-}
-
-/*  var auth;
-                final UserCredential user = (await auth.currentUser) as UserCredential;
-                if (user == null) {
-
-                  // ignore: deprecated_member_use
-                  Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text('No one has signed in.'),
-                  ));
-                  return;
-                }
-                await auth.signOut();
-                final AuthCredential uid = user.credential;
-                // ignore: deprecated_member_use
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid.toString() + ' has successfully signed out.'),
-                ));
-              },*/
+      ),
+    ),),);
+  }}
