@@ -1,10 +1,20 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rastreador/Caregiver/Authentication/Login.dart';
 import '../../main.dart';
+import 'package:http/http.dart' as http ;
+// ---------------------------- Coach Subscription Page -------------------------------
 class RegistrationCoach extends StatelessWidget {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
+  final _fname = TextEditingController();
+  final _lname = TextEditingController();
+  final _email = TextEditingController();
+  final _address = TextEditingController();
+  final _phone = TextEditingController();
+
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
@@ -23,13 +33,12 @@ class RegistrationCoach extends StatelessWidget {
       actions: [
         okButton,
       ],
+      elevation: 24.0,
+      backgroundColor: Colors.blueGrey[200],
     );
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
+      builder: (BuildContext context) => alert );
   }
   @override
   Widget build(BuildContext context) {
@@ -53,6 +62,7 @@ class RegistrationCoach extends StatelessWidget {
                      Padding(
                        padding: const EdgeInsets.all(3.0),
                        child: TextFormField(
+                         controller: _fname,
                      validator: (value){
                       if (value!.isEmpty){
                         return 'Your first name cannot be empty';
@@ -69,6 +79,7 @@ class RegistrationCoach extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                          child :TextFormField(
+                           controller: _lname,
                     validator: (value){
                       if (value!.isEmpty){
                         return 'Your last name cannot be empty';
@@ -88,7 +99,7 @@ class RegistrationCoach extends StatelessWidget {
                         padding: const EdgeInsets.all(3.0),
                         child: TextFormField(
                           obscureText: true,
-                          controller: _pwdController,
+                          controller: _phone,
                           validator: (value){
                             if (value!.isEmpty){
                               return 'Phone cannot be empty !';
@@ -111,6 +122,7 @@ class RegistrationCoach extends StatelessWidget {
                       Padding(
                        padding: const EdgeInsets.all(3.0),
                        child :TextFormField(
+                         controller: _email,
                     validator: (value){
                       if (value!.isEmpty){
                         return 'User E-mail cannot be empty';
@@ -146,8 +158,7 @@ class RegistrationCoach extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child :TextFormField(
-                          obscureText: true
-                          ,
+                          obscureText: true,
                           controller: _confpwdController,
                           validator: (value){
                             if (value != _pwdController.value.text){
@@ -163,9 +174,48 @@ class RegistrationCoach extends StatelessWidget {
                         ),),
                       SizedBox(height: 10),
                       MaterialButton(
-                          onPressed: (){
-                            if(_fromKey.currentState!.validate()){}
-                          },
+                          onPressed: () async {
+                            if(_fromKey.currentState!.validate()){
+                              List<String> data = [];
+                              String fname = _fname.text ;
+                              String lname = _lname.text ;
+                              String address = _address.text ;
+                              String phone = _phone.text ;
+                              String email = _email.text ;
+                              String location = _determinePosition() as String ;
+                              data.add(fname) ;
+                              data.add(lname);
+                              data.add (phone);
+                              data.add(address);
+                              data.add(email);
+                              data.add(location);
+                              http.Response res = await createCoach(data) ;
+                              if(res.statusCode == 200) {
+                          AlertDialog show = AlertDialog(
+                          title: Text("Congrats for joining us"),
+                            content: Text("Do you want to continue to your profile !"),
+                            actions: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              TextButton(
+                              onPressed:()=> {Navigator.push(context,
+                              MaterialPageRoute(builder: (context)=> LogIn())),
+                                 }, child: Text("Ok"),
+                              ),
+                                 SizedBox(width: 10,),
+                                 TextButton(
+                                  onPressed:() => {Navigator.push(context,
+                                      MaterialPageRoute(builder: (context)=> MyApp())),},
+                                   child: Text("exit"),),
+                              ],  ),  ] ,
+                            elevation: 24.0,
+                            backgroundColor: Colors.blueGrey[200],
+                             );
+                            showDialog(
+                            context: context,
+                            builder: (BuildContext context) => show );
+                            }}},
                           height: 50,
                           minWidth: double.infinity,
                           color: Theme.of(context).primaryColor,
@@ -197,4 +247,33 @@ class RegistrationCoach extends StatelessWidget {
                             child: Text("Login"),
                           ),], ),],),),),),),);
   }
+}
+// --------------------- Coach location with permission  -----------------------
+Future<Position> _determinePosition() async {
+  //Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  LocationPermission permission;
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');}}
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+  }
+  return await Geolocator.getCurrentPosition();}
+  // ----------------------------- Send Data to database --------------------------------------
+Future<http.Response> createCoach(List<String> data) async{
+  return http.post(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'),
+    headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8',},
+    body: jsonEncode(<String, String>
+    {
+      "first name" : data[0],
+      "last name" : data[1],
+      "phone" : data[2],
+      "address" : data[3],
+      "email" : data[4],
+      "id_location" : data[5],
+      "id_patient" : " ",
+    }),
+  );
 }

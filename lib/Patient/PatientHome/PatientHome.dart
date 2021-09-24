@@ -6,19 +6,27 @@ import 'package:rastreador/Patient/PatientHome/Feedback.dart';
 import 'package:rastreador/Patient/PatientHome/Progress.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
+import 'package:geolocator/geolocator.dart';
+
+// -------------------------- Getting patient Location ---------------------------
+Position position =  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high) as Position;
+enum LocationPermissionLevel {
+  location,
+  locationAlways,
+  locationWhenInUse,
+}
 // --------------------- Patient Profile Page  ----------------------------
 class PatientProfile extends StatefulWidget {
   @override
   Patient createState() {
     return Patient();
-  }
-}
+  }}
 class Patient extends State<PatientProfile>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Patient Profile'),),
-//---------- List of navigation pages in patient profile page--
+//-------------   List of navigation pages in patient profile page   ---------
        drawer: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -73,7 +81,7 @@ class Patient extends State<PatientProfile>{
                           MaterialPageRoute(builder: (context)=> MyApp()));}
                   ),
                   SizedBox(height : 10),
-                  Text ('Welcome, (patient data here),',style: TextStyle(fontStyle: FontStyle.italic),),
+                  Text ('Welcome,',style: TextStyle(fontStyle: FontStyle.italic),),
                   SizedBox(height: 10),
                   Container (
                     child :Row(

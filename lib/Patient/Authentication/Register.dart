@@ -1,26 +1,32 @@
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:rastreador/Patient/Authentication/Login.dart';
-import '../../main.dart';
-import 'package:http/http.dart' as http;
+import 'dart:convert' ;
+import 'package:flutter/cupertino.dart' ;
+import 'package:flutter/material.dart' ;
+import 'package:rastreador/Patient/Authentication/Login.dart' ;
+import '../../main.dart' ;
+import 'package:http/http.dart' as http ;
+import 'package:geolocator/geolocator.dart';
 
-// ---------------------- Subscription Page ------------------------------
+/// ---------------------- Subscription Page ----------------------------
 class Register extends StatelessWidget{
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
-  late bool  valuefirst = true ;
+  final _emailController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _phoneController = TextEditingController() ;
+  final _ageController = TextEditingController();
+  final _addressController = TextEditingController();
+  late bool  valuefirst = false ;
   late bool valuesecond = false ;
- // Gender? _sexe = Gender.female ;
   showAlertDialog(BuildContext context) {
-    // set up the button
+  /// set up the button
     Widget okButton = TextButton(
         style: TextButton.styleFrom(
           padding: const EdgeInsets.all(16.0),
           primary: Colors.white,
           textStyle: const TextStyle(fontSize: 20)),
-      child: Text("OK"),
+         child: Text("OK"),
       onPressed: (){ Navigator.push(context,
         MaterialPageRoute(builder: (context)=> MyApp()));},
     );
@@ -31,14 +37,12 @@ class Register extends StatelessWidget{
       actions: [
         okButton,
       ],
-    );
-    // show the dialog
+      elevation: 24.0,
+      backgroundColor: Colors.blueGrey[200],
+     );// show the dialog
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
+      builder: (BuildContext context) => alert );
   }
   @override
   Widget build(BuildContext context) {
@@ -58,23 +62,27 @@ class Register extends StatelessWidget{
                       MaterialPageRoute(builder: (context)=> MyApp())); },
                   ),
                   SizedBox(height : 10),
-                  TextFormField(
-                    validator: (value){
-                      if (value!.isEmpty){
-                        return 'Patient first name cannot be empty';
-                      }
-                      return null ;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'FirstName',
-                      hintText: 'Patient first name',
-                      border : OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      prefixIcon: Icon(Icons.person),
-                    ),),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                      child : TextFormField(
+                        controller: _firstnameController,
+                      validator: (value){
+                         if (value!.isEmpty){
+                          return 'Patient first name cannot be empty';
+                        }
+                        return null ;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'FirstName',
+                        hintText: 'Patient first name',
+                        border : OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.person),
+                    ),),),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
+                      controller: _lastnameController,
                       validator: (value){
                         if (value!.isEmpty){
                           return 'User last name cannot be empty';
@@ -91,6 +99,7 @@ class Register extends StatelessWidget{
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
+                      controller: _addressController,
                       validator: (value){
                         if (value!.isEmpty){
                           return 'User Address cannot be empty';
@@ -106,6 +115,7 @@ class Register extends StatelessWidget{
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
+                      controller : _phoneController ,
                       validator: (value){
                         if (value!.isEmpty){
                           return 'User phone number cannot be empty';
@@ -120,30 +130,54 @@ class Register extends StatelessWidget{
                         labelText: 'Phone ',
                         hintText: '+216  ',
                         border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.phone_android),),),), // n// new Divider(height: 5.0, color: Colors.bl//------------- Select gender of user (radio) ---------------
-                 Padding(
+                        prefixIcon: Icon(Icons.phone_android),),),),
+                  // n// new Divider(height: 5.0, color: Colors.bl//------------- Select gender of user (radio) ---------------
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child :TextFormField(
+                        controller :_ageController,
+                      validator: (value){
+                        if (value!.isEmpty){
+                          return 'Age cannot be empty';
+                        }else if (value.length <2){
+                          return 'Age must contains only 2 Numbers !';
+                        }else if(value.length >2){
+                          return 'Age must contains only 2 Numbers !';
+                        }
+                        return null ;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Age ',
+                        hintText: 'Age  ',
+                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.account_circle),),),),
+                  Padding(
                     padding: new EdgeInsets.all(3.0),),
                   new Text(
                     'Gender :',
                     style: new TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold),),
-                  Column (
+                    Column (
                     children: [
                       CheckboxListTile(
-                        secondary: const Icon(Icons.female),
-                          title : const Text('Female') ,
-                          value: this.valuefirst,
-                          onChanged: (bool? value){
-                           this.valuefirst = true ;
-                          }),
-
+                        secondary: Icon(Icons.female),
+                          title : Text('Female') ,
+                          controlAffinity: ListTileControlAffinity.platform,
+                          value: valuefirst,
+                          onChanged: (value) => true ,
+                        activeColor: Colors.greenAccent,
+                        checkColor: Colors.black38,
+                          ),
                       CheckboxListTile(
-                          secondary: const Icon(Icons.male),
-                          title : const Text('Male') ,
-                          value: this.valuesecond,
-                          onChanged: (bool? value){
-                            this.valuesecond = false ;
-                          }),],),
+                          secondary: Icon(Icons.male),
+                          title : Text('Male') ,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                       // controlAffinity: ListTileControlAffinity.platform,
+                          value: valuesecond,
+                          onChanged: (value) => true ,
+                        activeColor: Colors.greenAccent,
+                        checkColor: Colors.black38,
+                      ),],),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
@@ -197,12 +231,52 @@ class Register extends StatelessWidget{
                     ),),
                   SizedBox(height: 10),
                   MaterialButton(
-                      onPressed: (){
+                      onPressed: () async{
                         if(_fromKey.currentState!.validate()){
-                          // ignore: unnecessary_statements
-                            createPatient ;
-                        }
-                      },
+                        List<String> data = [];
+                        String firstname =_firstnameController.text ;
+                        String lastname= _lastnameController.text ;
+                        String age = _ageController.text ;
+                        String  phone = _phoneController.text  ;
+                        String address  = _addressController.text ;
+                        String email = _emailController.text ;
+                        String location = _determinePosition() as String ;
+                        String pwd = _confpwdController.text ;
+                        data.add(firstname) ;
+                        data.add(lastname);
+                        data.add(age);
+                        data.add (phone);
+                        data.add(address);
+                        data.add(email);
+                        data.add(location);
+                        data.add(pwd);
+                        http.Response res = await createPatient(data) ;
+                        if(res.statusCode == 200) {
+                          AlertDialog show = AlertDialog(
+                            title: Text("Congrats for joining us"),
+                            content: Text("Do you want to continue to your profile !"),
+                            actions: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextButton(
+                                    onPressed:()=> {Navigator.push(context,
+                                        MaterialPageRoute(builder: (context)=> Login())),
+                                    }, child: Text("Ok"),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  TextButton(
+                                    onPressed:() => {Navigator.push(context,
+                                        MaterialPageRoute(builder: (context)=> MyApp())),},
+                                    child: Text("exit"),),
+                                ],  ),  ] ,
+                            elevation: 24.0,
+                            backgroundColor: Colors.blueGrey[200],
+                          );
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => show );
+                      }}},
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme.of(context).primaryColor,
@@ -234,49 +308,38 @@ class Register extends StatelessWidget{
                           MaterialPageRoute(builder: (context)=> Login()));
                       },
                         child: Text("Login"),
-                      ),
-                    ], ),
-                ], ),
-              /*ElevatedButton(
-                child: Text('Submit'),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login()),
-                  );
-                },
-              ),*/
-
-            ),
-
-          ),),
-      ),
-
-    );
-
+                      ),],),],),),),),),);
+  }}
+/// -------------------------- Patient location with permission -------------------------
+Future<Position> _determinePosition() async {
+  //Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  LocationPermission permission;
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');}}
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
   }
-}
-// --------------------- Sending Data To server -------------------
-Future<http.Response> createPatient(String data) {
-  return http.post(
-    Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
+  return await Geolocator.getCurrentPosition();}
+/// --------------------- Sending Data To database -------------------
+Future<http.Response> createPatient(List<String> data) {
+  return http.post(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+    headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8',},
     body: jsonEncode(<String, String>
     {
-      "address" : " ",
-      "age" : " ",
-      "email" : " ",
-      "first name" : " ",
-      "gender" : " ",
-      "id_activity" : " ",
-      "id_caregiver" : " ",
+      "first name" : data[0],
+      "last name" : data[1],
+      "age" : data[2],
+      "phone" : data[3],
+      "address" : data[4],
+      "email" : data[5],
+      "password" : "",
+      "gender" : " " ,
       "id_disease" : " ",
-      "id_location" : " ",
+      "id_location" : data[6],
       "id_patient" : " ",
-      "last name" : " ",
-      "phone" : " "
     }),
   );
 }

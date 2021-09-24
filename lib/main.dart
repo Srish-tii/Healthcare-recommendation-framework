@@ -28,28 +28,33 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Patient Tracker"),),
-        body: SafeArea(
+        body: Container(
+          //constraints: BoxConstraints.expand(),
+          decoration: BoxDecoration(
+            color: const Color(0xff7c94b6),
+            image: DecorationImage(image: AssetImage("assets/back3.jpg"), fit: BoxFit.cover),),
         child :SingleChildScrollView(
         child: Padding(
         padding:const EdgeInsets.all(20.0),
            child: Form(
-             child : Column (
+             child : Column(
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children:<Widget>[
-                 SizedBox(height: 20),
                Container (
                     child: Row (
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children : <Widget>[
-                        Expanded (
+                        Expanded(
                             child :Text(
                           'Get start with our application, schedule your daily '
                           'activities time and consult your caregiver '
-                                'advices.',style: TextStyle(fontStyle: FontStyle.italic),),),
+                                'advices.',
+                              softWrap: true,
+                              style: TextStyle(fontStyle: FontStyle.italic),),),
                         Expanded(child: Padding (
                           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
                             child :  Image(
-                            image: AssetImage('assets/trackingpt.png'),width:110,height:90),),),],),),
+                            image: AssetImage('assets/trackingpt.png'),width:120,height:80),),),],),),
                  SizedBox(height: 10),
                   Container (
                     child : Row(
@@ -73,7 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
                      Expanded (
                        child :Text(
                          'Get start with our application to consult your ,'
-                          'patients health and give your prescription .',style: TextStyle(fontStyle: FontStyle.italic),
+                          'patients health and give your prescription .',
+                     softWrap: true,
+                     style: TextStyle(fontStyle: FontStyle.italic),
                        ),
                      ),
                      Expanded(child: Image(
@@ -103,7 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
                          Expanded (
                            child :Text(
                              'Get start with our application, consult your ,'
-                                 'patients activities progress and give recommendation .',style: TextStyle(fontStyle: FontStyle.italic),
+                                 'patients activities progress and give recommendation.',
+                             softWrap: true,
+                             style: TextStyle(fontStyle: FontStyle.italic),
                            ),
                          ),
                          Expanded(child: Image(
@@ -137,6 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                    child: Text("More Information"),
                  ),],),
                  SizedBox(height: 50,),
+
                 ],),
            ),),
         ),),

@@ -11,10 +11,7 @@ class Login extends StatelessWidget{
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  late bool _success;
 // -----------------------Test  firebase --------------------------------
-
-
 /*  void _register() async {
 final UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text, password: _passwordController.text);

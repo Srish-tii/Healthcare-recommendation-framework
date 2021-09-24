@@ -1,18 +1,41 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Caregiver/Authentication/CoachRegistration.dart';
-
+import 'package:http/http.dart' as http ;
 import '../../main.dart';
-
-class
-
-LogIn extends StatelessWidget {
+/// ----------------------- Class Caregiver account  ----------------------
+class Caregiver {
+  final String email;
+  final String password;
+  Caregiver({
+    required this.email,
+    required this.password ,
+  });
+  factory Caregiver.fromJson(Map<String, dynamic> json) {
+    return Caregiver(
+      email: json['email'],
+      password: json['password'],
+    );
+  }
+}
+Future<Caregiver> fetchCaregiver() async {
+  final response = await http
+      .get(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'));
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response, then parse the JSON.
+    return Caregiver.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response, then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+/// -------------------- caregiver login page using rest API ----------
+class LogIn extends StatelessWidget {
   final  _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  late bool _success;
-// -----------------------Test  firebase --------------------------------
+  late Future<Caregiver> futureCaregiver;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('LogIn')),
@@ -30,8 +53,7 @@ LogIn extends StatelessWidget {
                       .primaryColor), onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MyApp()));
-                  },
-                  ),
+                  },),
                   SizedBox(height: 10),
                   Text("Welcome ", style: TextStyle(
                       fontSize: 22,
@@ -74,8 +96,8 @@ LogIn extends StatelessWidget {
                   MaterialButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print("Email :${_emailController.text}");
-                          print("Password :${_passwordController.text}");
+                          String email = _emailController.text;
+                          String password = _passwordController.text;
                         }
                       },
                       height: 50,
@@ -89,9 +111,7 @@ LogIn extends StatelessWidget {
                       ),
                       child: Text("login",
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight
-                            .bold),
-                      )
-                  ),
+                            .bold),)),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
