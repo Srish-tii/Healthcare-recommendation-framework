@@ -1,15 +1,21 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../main.dart';
-
-class SelectActivity extends StatelessWidget{
+class WriteActivity extends StatefulWidget{
+  @override
+  SelectActivity createState() => SelectActivity();
+}
+class SelectActivity extends State<WriteActivity>{
+  //final database = FirebaseDatabase.instance.reference() ;
   final _actname = TextEditingController();
   final _actype = TextEditingController();
+  final _actlocation = TextEditingController();
   @override
   Widget build(BuildContext context) {
+   // final activitiyRef = database.child('/activity');
     return Scaffold(
-      appBar: AppBar (title: Text('Patient Subscription Page')),
+      appBar: AppBar (title: Text('')),
       body:SafeArea(
           child: SingleChildScrollView(
           child :Padding (
@@ -18,7 +24,13 @@ class SelectActivity extends StatelessWidget{
               child : Column (
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-              IconButton( icon:Icon(Icons.home , color:Theme.of(context).primaryColor),
+                    ElevatedButton(onPressed: (){
+                     /* activitiyRef.set({'id_acivity' : '0001',
+                      'name' : 'walking' ,
+                        'location' : 'Walking street'
+                      });*/
+                    }, child: Text('set activity')),
+              /*IconButton( icon:Icon(Icons.home , color:Theme.of(context).primaryColor),
               onPressed: (){Navigator.push(context,
                   MaterialPageRoute(builder: (context)=> MyApp())); },
             ),
@@ -58,7 +70,7 @@ class SelectActivity extends StatelessWidget{
                               borderRadius: BorderRadius.circular(10.0)),
                           prefixIcon: Icon(Icons.accessibility_new),
                         ),),),
-    ],),),),),),
+    */],),),),),),
     );
 }
 }

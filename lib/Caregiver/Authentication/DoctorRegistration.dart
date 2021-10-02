@@ -116,23 +116,6 @@ class RegistrationDoctor extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      controller: _email,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Doctor E-mail cannot be empty';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'E-mail',
-                        hintText: 'Put your E-mail name',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.email),
-                      ),),),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
                       controller: _phone,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -154,6 +137,24 @@ class RegistrationDoctor extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: TextFormField(
+                      controller: _email,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Doctor E-mail cannot be empty';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'E-mail',
+                        hintText: 'Put your E-mail name',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.email),
+                      ),),),
+
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(

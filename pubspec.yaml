@@ -16,12 +16,17 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.3
+# ---------------- Geolocation and Time dependencies -------------------
   geolocator: ^7.6.1
   cupertino_icons: ^1.0.2
   location_permissions: ^3.0.0
   table_calendar: ^3.0.2
   syncfusion_flutter_calendar: ^19.2.62
-
+# --------------- firebase dependencies ------------------
+  firebase_core: ^1.7.0
+  firebase_database: ^8.0.0
+  firebase_auth: ^3.1.2
+  firebase_dynamic_links: ^2.0.10
 dev_dependencies:
   flutter_test:
     sdk: flutter

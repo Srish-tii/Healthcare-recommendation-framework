@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Register.dart';
 //  --------------------------- Log in page ---------------------------------
 class Login extends StatelessWidget{
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   final  _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -91,10 +93,19 @@ final UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPasswo
                     ),
                     SizedBox(height: 30),
                     MaterialButton(
-                        onPressed: () {
+                        onPressed: () async{
                           if (_formKey.currentState!.validate()) {
-                            print("Email :${_emailController.text}");
-                            print("Password :${_passwordController.text}");
+                            try {
+                              UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text);
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'user-not-found') {
+                                print('No user found for that email.');
+                              } else if (e.code == 'wrong-password') {
+                                print('Wrong password provided for that user.');
+                              }
+                            }
                           }
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context)=> PatientProfile()));

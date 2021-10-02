@@ -45,7 +45,7 @@ class Patient extends State<PatientProfile>{
               },
             ),
             ListTile(
-              title: Text('Activities Finished'),
+              title: Text('Consult Activities'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => Activities()),);
               },

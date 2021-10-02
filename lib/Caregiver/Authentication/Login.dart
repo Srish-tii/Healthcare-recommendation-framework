@@ -1,17 +1,22 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Caregiver/Authentication/CoachRegistration.dart';
 import 'package:http/http.dart' as http ;
 import '../../main.dart';
-/// ----------------------- Class Caregiver account  ----------------------
+
+/// ----------------------- getting Caregiver account data ----------------------
+
 class Caregiver {
   final String email;
   final String password;
+
   Caregiver({
     required this.email,
-    required this.password ,
+    required this.password,
   });
+
   factory Caregiver.fromJson(Map<String, dynamic> json) {
     return Caregiver(
       email: json['email'],
@@ -19,15 +24,20 @@ class Caregiver {
     );
   }
 }
-Future<Caregiver> fetchCaregiver() async {
-  final response = await http
-      .get(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'));
+List <Caregiver> parseCaregivers (String responseBody){
+  final parsed = json.decode(responseBody).cast<Map<String ,dynamic>>();
+  return parsed.map<Caregiver>((json)=> Caregiver.fromJson(json)).tolist();
+}
+
+Future<List<Caregiver>> fetchCaregiver() async {
+  final response = await http.get(Uri.parse(('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json')));
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response, then parse the JSON.
-    return Caregiver.fromJson(jsonDecode(response.body));
+    return parseCaregivers(response.body) ;
+     // Caregiver.fromJson(jsonDecode(response.body));
   } else {
     // If the server did not return a 200 OK response, then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load caregiver');
   }
 }
 /// -------------------- caregiver login page using rest API ----------
@@ -36,6 +46,7 @@ class LogIn extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late Future<Caregiver> futureCaregiver;
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('LogIn')),
@@ -98,6 +109,10 @@ class LogIn extends StatelessWidget {
                         if (_formKey.currentState!.validate()) {
                           String email = _emailController.text;
                           String password = _passwordController.text;
+
+                          {
+                           // List <Patient> patients = await fetchPatient ();
+                          }
                         }
                       },
                       height: 50,

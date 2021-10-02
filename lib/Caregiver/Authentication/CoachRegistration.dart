@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:rastreador/Caregiver/Authentication/Login.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http ;
+
 // ---------------------------- Coach Subscription Page -------------------------------
 class RegistrationCoach extends StatelessWidget {
   final _fromKey = GlobalKey<FormState>();
