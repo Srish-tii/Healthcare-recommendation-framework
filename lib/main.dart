@@ -5,8 +5,18 @@ import 'package:rastreador/Caregiver/Authentication/DoctorRegistration.dart';
 import 'package:rastreador/Caregiver/Authentication/Login.dart';
 import 'Patient/Authentication/Login.dart';
 import 'Patient/Authentication/Register.dart';
-void main() {
+import 'Patient/Feedback/AlertTry.dart';
+/*import 'package:android_alarm_manager/android_alarm_manager.dart';
+
+void printHello() {
+  final DateTime now = new DateTime.now();
+  final int isolateId = Isolate.current.hashCode;
+  print("[$now] Hello, world! isolate=${isolateId} function='$printHello'");
+}*/
+void main() async {
+  //final int helloAlarmID = 0;
   runApp(MyApp());
+  //await AndroidAlarmManager.periodic(const Duration(minutes: 1), helloAlarmID, printHello);
 }
 class MyApp extends StatelessWidget {
   @override
@@ -24,7 +34,6 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();}
 class _MyHomePageState extends State<MyHomePage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Patient Tracker"),),
@@ -46,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                        children : <Widget>[
                         Expanded(
                             child :Text(
-                          'Get start with our application, schedule your daily '
+                          'Get started with our application, schedule your daily '
                           'activities time and consult your caregiver '
                                 'advices.',
                               softWrap: true,
@@ -77,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                    children : <Widget>[
                      Expanded (
                        child :Text(
-                         'Get start with our application to consult your ,'
+                         'Get started with our application to consult your ,'
                           'patients health and give your prescription .',
                      softWrap: true,
                      style: TextStyle(fontStyle: FontStyle.italic),
@@ -109,8 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
                        children : <Widget>[
                          Expanded (
                            child :Text(
-                             'Get start with our application, consult your ,'
-                                 'patients activities progress and give recommendation.',
+                             'Get started with our application, consult your ,'
+                                 'patient\'s activities progress and give recommendation.',
                              softWrap: true,
                              style: TextStyle(fontStyle: FontStyle.italic),
                            ),
@@ -141,12 +150,11 @@ class _MyHomePageState extends State<MyHomePage> {
                  Text("To Know about us :"),
                  SizedBox(width: 20),
                  TextButton(onPressed: () {Navigator.push(context,
-                     MaterialPageRoute(builder: (context)=> MyApp()));
+                     MaterialPageRoute(builder: (context)=> RatelApp()));
                  },
                    child: Text("More Information"),
                  ),],),
                  SizedBox(height: 50,),
-
                 ],),
            ),),
         ),),

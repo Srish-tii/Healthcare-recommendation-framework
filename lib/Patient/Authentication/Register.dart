@@ -5,9 +5,8 @@ import 'package:rastreador/Patient/Authentication/Login.dart' ;
 import '../../main.dart' ;
 import 'package:http/http.dart' as http ;
 import 'package:geolocator/geolocator.dart';
-
 /// ---------------------- Subscription Page ----------------------------
-class Register extends StatelessWidget{
+class Register extends StatelessWidget {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
@@ -17,18 +16,16 @@ class Register extends StatelessWidget{
   final _phoneController = TextEditingController() ;
   final _ageController = TextEditingController();
   final _addressController = TextEditingController();
-  late bool  valuefirst = false ;
-  late bool valuesecond = false ;
   showAlertDialog(BuildContext context) {
-  /// set up the button
+    /// set up the button
     Widget okButton = TextButton(
-        style: TextButton.styleFrom(
+      style: TextButton.styleFrom(
           padding: const EdgeInsets.all(16.0),
           primary: Colors.white,
           textStyle: const TextStyle(fontSize: 20)),
-         child: Text("OK"),
+      child: Text("OK"),
       onPressed: (){ Navigator.push(context,
-        MaterialPageRoute(builder: (context)=> MyApp()));},
+          MaterialPageRoute(builder: (context)=> MyApp()));},
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -39,10 +36,10 @@ class Register extends StatelessWidget{
       ],
       elevation: 24.0,
       backgroundColor: Colors.blueGrey[200],
-     );// show the dialog
+    );// show the dialog
     showDialog(
-      context: context,
-      builder: (BuildContext context) => alert );
+        context: context,
+        builder: (BuildContext context) => alert );
   }
   @override
   Widget build(BuildContext context) {
@@ -59,15 +56,15 @@ class Register extends StatelessWidget{
                 children: <Widget>[
                   IconButton( icon:Icon(Icons.home , color:Theme.of(context).primaryColor),
                     onPressed: (){Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=> MyApp())); },
+                        MaterialPageRoute(builder: (context)=> MyApp())); },
                   ),
                   SizedBox(height : 10),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                      child : TextFormField(
-                        controller: _firstnameController,
+                    child : TextFormField(
+                      controller: _firstnameController,
                       validator: (value){
-                         if (value!.isEmpty){
+                        if (value!.isEmpty){
                           return 'Patient first name cannot be empty';
                         }
                         return null ;
@@ -78,7 +75,7 @@ class Register extends StatelessWidget{
                         border : OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.person),
-                    ),),),
+                      ),),),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
@@ -135,7 +132,7 @@ class Register extends StatelessWidget{
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
-                        controller :_ageController,
+                      controller :_ageController,
                       validator: (value){
                         if (value!.isEmpty){
                           return 'Age cannot be empty';
@@ -151,36 +148,11 @@ class Register extends StatelessWidget{
                         hintText: 'Age  ',
                         border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.account_circle),),),),
-                  Padding(
-                    padding: new EdgeInsets.all(3.0),),
-                  new Text(
-                    'Gender :',
-                    style: new TextStyle(
-                        fontSize: 15.0, fontWeight: FontWeight.bold),),
-                    Column (
-                    children: [
-                      CheckboxListTile(
-                        secondary: Icon(Icons.female),
-                          title : Text('Female') ,
-                          controlAffinity: ListTileControlAffinity.platform,
-                          value: valuefirst,
-                          onChanged: (value) => true ,
-                        activeColor: Colors.greenAccent,
-                        checkColor: Colors.black38,
-                          ),
-                      CheckboxListTile(
-                          secondary: Icon(Icons.male),
-                          title : Text('Male') ,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                       // controlAffinity: ListTileControlAffinity.platform,
-                          value: valuesecond,
-                          onChanged: (value) => true ,
-                        activeColor: Colors.greenAccent,
-                        checkColor: Colors.black38,
-                      ),],),
+
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
+                      controller: _emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Enter your Email';
@@ -233,50 +205,49 @@ class Register extends StatelessWidget{
                   MaterialButton(
                       onPressed: () async{
                         if(_fromKey.currentState!.validate()){
-                        List<String> data = [];
-                        String firstname =_firstnameController.text ;
-                        String lastname= _lastnameController.text ;
-                        String age = _ageController.text ;
-                        String  phone = _phoneController.text  ;
-                        String address  = _addressController.text ;
-                        String email = _emailController.text ;
-                        String location = _determinePosition() as String ;
-                        String pwd = _confpwdController.text ;
-                        data.add(firstname) ;
-                        data.add(lastname);
-                        data.add(age);
-                        data.add (phone);
-                        data.add(address);
-                        data.add(email);
-                        data.add(location);
-                        data.add(pwd);
-                        http.Response res = await createPatient(data) ;
-                        if(res.statusCode == 200) {
-                          AlertDialog show = AlertDialog(
-                            title: Text("Congrats for joining us"),
-                            content: Text("Do you want to continue to your profile !"),
-                            actions: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextButton(
-                                    onPressed:()=> {Navigator.push(context,
-                                        MaterialPageRoute(builder: (context)=> Login())),
-                                    }, child: Text("Ok"),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  TextButton(
-                                    onPressed:() => {Navigator.push(context,
-                                        MaterialPageRoute(builder: (context)=> MyApp())),},
-                                    child: Text("exit"),),
-                                ],  ),  ] ,
-                            elevation: 24.0,
-                            backgroundColor: Colors.blueGrey[200],
-                          );
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => show );
-                      }}},
+                          List<String> data = [];
+                          String firstname =_firstnameController.text ;
+                          String lastname= _lastnameController.text ;
+                          String age = _ageController.text ;
+                          String  phone = _phoneController.text  ;
+                          String address  = _addressController.text ;
+                          String email = _emailController.text ;
+                          String pwd = _confpwdController.text ;
+                          data.add(firstname) ;
+                          data.add(lastname);
+                          data.add(age);
+                          data.add (phone);
+                          data.add(address);
+                          data.add(email);
+                          data.add(pwd);
+                          http.Response res = await createPatient(data) ;
+                          if(res.statusCode == 200) {
+                            _determinePosition() ;
+                            AlertDialog show = AlertDialog(
+                              title: Text("Congrats for joining us"),
+                              content: Text("Do you want to continue to your profile !"),
+                              actions: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextButton(
+                                      onPressed:()=> {Navigator.push(context,
+                                          MaterialPageRoute(builder: (context)=> Login())),
+                                      }, child: Text("Ok"),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    TextButton(
+                                      onPressed:() => {Navigator.push(context,
+                                          MaterialPageRoute(builder: (context)=> MyApp())),},
+                                      child: Text("Cancel"),),
+                                  ],  ),  ] ,
+                              elevation: 24.0,
+                              backgroundColor: Colors.blueGrey[200],
+                            );
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) => show );
+                          }}},
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme.of(context).primaryColor,
@@ -312,17 +283,10 @@ class Register extends StatelessWidget{
   }}
 /// -------------------------- Patient location with permission -------------------------
 Future<Position> _determinePosition() async {
-  //Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  LocationPermission permission;
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return Future.error('Location permissions are denied');}}
-  if (permission == LocationPermission.deniedForever) {
-    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
-  }
-  return await Geolocator.getCurrentPosition();}
+  return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+  // return await Geolocator.getCurrentPosition();
+}
 /// --------------------- Sending Data To database -------------------
 Future<http.Response> createPatient(List<String> data) {
   return http.post(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
@@ -338,7 +302,7 @@ Future<http.Response> createPatient(List<String> data) {
       "password" : "",
       "gender" : " " ,
       "id_disease" : " ",
-      "id_location" : data[6],
+      "id_location" : " ",
       "id_patient" : " ",
     }),
   );

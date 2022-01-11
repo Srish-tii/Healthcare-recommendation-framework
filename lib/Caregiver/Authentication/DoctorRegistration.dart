@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Caregiver/Authentication/Login.dart';
 import '../../main.dart';
@@ -179,8 +180,7 @@ class RegistrationDoctor extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      obscureText: true
-                      ,
+                      obscureText: true,
                       controller: _confpwdController,
                       validator: (value) {
                         if (value != _pwdController.value.text) {
@@ -199,45 +199,57 @@ class RegistrationDoctor extends StatelessWidget {
                   SizedBox(height: 20),
                   MaterialButton(
                       onPressed: () async {
-                   if(_fromKey.currentState!.validate()){
-                        List<String> data = [];
-                        String fname = _fname.text;
-                        String lname = _lname.text;
-                        String address = _address.text;
-                        String phone = _phone.text;
-                        String email = _email.text;
-                        data.add(fname);
-                        data.add(lname);
-                        data.add(phone);
-                        data.add(address);
-                        data.add(email);
-                        http.Response res = await createDoctor(data);
-                        if(res.statusCode == 200) {
-                          AlertDialog show = AlertDialog(
-                            title: Text("Congrats for joining us"),
-                            content: Text("Do you want to continue to your profile !"),
-                            actions: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextButton(
-                                    onPressed:()=> {Navigator.push(context,
-                                        MaterialPageRoute(builder: (context)=> LogIn())),
-                                    }, child: Text("Ok"),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  TextButton(
-                                    onPressed:() => {Navigator.push(context,
-                                        MaterialPageRoute(builder: (context)=> MyApp())),},
-                                    child: Text("exit"),),
-                                ],  ),  ] ,
-                            elevation: 24.0,
-                            backgroundColor: Colors.blueGrey[200],
-                          );
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => show );
-                        }}},
+                        if(_fromKey.currentState!.validate()){
+                          List<String> data = [];
+                          String fname = _fname.text;
+                          String lname = _lname.text;
+                          String address = _address.text;
+                          String phone = _phone.text;
+                          String emails = _email.text;
+                          data.add(fname);
+                          data.add(lname);
+                          data.add(phone);
+                          data.add(address);
+                          data.add(emails);
+                          http.Response res = await createDoctor(data);
+                          try {
+                            UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                email: emails, password: _pwdController.text);
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'weak-password') {
+                              print('The password provided is too weak.');
+                            } else if (e.code == 'email-already-in-use') {
+                              print('The account already exists for that email.');
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
+                          if(res.statusCode == 200) {
+                            AlertDialog show = AlertDialog(
+                              title: Text("Congrats for joining us"),
+                              content: Text("Do you want to continue to your profile !"),
+                              actions: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextButton(
+                                      onPressed:()=> {Navigator.push(context,
+                                          MaterialPageRoute(builder: (context)=> LogIn())),
+                                      }, child: Text("Ok"),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    TextButton(
+                                      onPressed:() => {Navigator.push(context,
+                                          MaterialPageRoute(builder: (context)=> MyApp())),},
+                                      child: Text("exit"),),
+                                  ],  ),  ] ,
+                              elevation: 24.0,
+                              backgroundColor: Colors.blueGrey[200],
+                            );
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) => show );
+                          }}},
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme

@@ -55,3 +55,6 @@ dependencies {
 
 
 }
+configurations {
+    compile.exclude group: 'com.google.zxing'
+}

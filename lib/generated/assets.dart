@@ -8,7 +8,9 @@ class Assets {
   static const String assetsBack5 = 'assets/back5.jpg';
   static const String assetsCaregiver = 'assets/caregiver.png';
   static const String assetsHealthcare = 'assets/healthcare.png';
+  static const String assetsPatPrac = 'assets/PatPrac.jpg';
   static const String assetsProgress = 'assets/progress.png';
   static const String assetsTrackingpt = 'assets/trackingpt.png';
+  static const String assetsVdoc3 = 'assets/vdoc3.jpg';
 
 }

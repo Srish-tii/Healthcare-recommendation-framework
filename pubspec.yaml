@@ -16,20 +16,20 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.3
+  english_words: ^4.0.0
+  syncfusion_flutter_datepicker: ^19.3.48
+  rflutter_alert: ^2.0.4
 # ---------------- Geolocation and Time dependencies -------------------
   geolocator: ^7.6.1
   cupertino_icons: ^1.0.2
-  location_permissions: ^3.0.0
+  #location_permissions: ^3.0.0
   table_calendar: ^3.0.2
   syncfusion_flutter_calendar: ^19.2.62
 # --------------- firebase dependencies ------------------
   firebase_core: ^1.7.0
   firebase_database: ^8.0.0
   firebase_auth: ^3.1.2
-  firebase_dynamic_links: ^2.0.10
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -50,6 +50,8 @@ flutter:
     - assets/back3.jpg
     - assets/back4.jpg
     - assets/back5.jpg
+    - assets/PatPrac.jpg
+    - assets/vdoc3.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -75,3 +77,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

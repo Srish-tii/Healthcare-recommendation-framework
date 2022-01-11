@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Patient/Authentication/Login.dart';
-
 import 'Register.dart';
 
 class Authentication extends StatefulWidget{
@@ -9,7 +8,6 @@ class Authentication extends StatefulWidget{
 }
 
 class _AuthenticatonState extends State <Authentication>  {
-
   bool isToggle = false;
   void toggleScreen(){
     setState(() {

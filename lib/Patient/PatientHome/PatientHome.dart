@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Patient/Authentication/Register.dart';
-import 'package:rastreador/Patient/PatientHome/ActivitiesFinished.dart';
-import 'package:rastreador/Patient/PatientHome/Feedback.dart';
+import 'package:rastreador/Patient/Feedback/Feedback.dart';
+import 'package:rastreador/Patient/PatientHome/Activity.dart';
 import 'package:rastreador/Patient/PatientHome/Progress.dart';
 import '../../main.dart';
-import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'Disease.dart';
 
-// -------------------------- Getting patient Location ---------------------------
-Position position =  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high) as Position;
+// -------------------------- Getting patient Location ------------------------
+Position position = Geolocator.getCurrentPosition(desiredAccuracy:LocationAccuracy.high) as Position;
 enum LocationPermissionLevel {
   location,
   locationAlways,
   locationWhenInUse,
 }
-// --------------------- Patient Profile Page  ----------------------------
+// ------------------------ Patient Profile Page  ----------------------------
 class PatientProfile extends StatefulWidget {
   @override
   Patient createState() {
@@ -25,8 +25,24 @@ class Patient extends State<PatientProfile>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Patient Profile'),),
-//-------------   List of navigation pages in patient profile page   ---------
+      appBar: AppBar(
+        title: Text('Patient Profile'),
+        actions :<Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_alert),
+            tooltip: 'Notification',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('No activity scheduled!')));
+            },
+          ),],
+        flexibleSpace:Container(decoration:BoxDecoration(gradient:LinearGradient(
+          colors: [Colors.greenAccent, Colors.pinkAccent],
+          begin: Alignment.bottomRight,
+          end: Alignment.topLeft,
+        ),),)
+      ),
+//--------------- List of navigation pages in patient profile page -----------
        drawer: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -35,9 +51,7 @@ class Patient extends State<PatientProfile>{
                   decoration: BoxDecoration(
                     color: Colors.green[200],
               ),
-              child: Text('Home '),
-
-            ),
+                   child: Text('Home '),),
             ListTile(
               title: Text('Patient Profile'),
               onTap: () {
@@ -59,7 +73,7 @@ class Patient extends State<PatientProfile>{
             ListTile(
               title: Text('Give Feedback'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => PatientFeedback()),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackPage()),);
               },
             ),
           ],
@@ -122,7 +136,7 @@ class Patient extends State<PatientProfile>{
                    Text('Add new disease :'),
                    SizedBox(width: 5),
                    TextButton(onPressed: () {Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=> Activities()));
+                      MaterialPageRoute(builder: (context)=> Disease()));
                       },
                       child: Text ('Disease'),
                    ),],),
@@ -132,7 +146,7 @@ class Patient extends State<PatientProfile>{
                     children :[
                       Text ('Give your Feedback :'),
                   TextButton(onPressed: () {Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=> PatientFeedback()));
+                      MaterialPageRoute(builder: (context)=> FeedbackPage()));
                   },
                     child: Text("Feedback"),
                   ),],),
@@ -140,14 +154,15 @@ class Patient extends State<PatientProfile>{
                      Row (
                          mainAxisAlignment : MainAxisAlignment.center ,
                          children :[
-                      Text ('Update your personal information '),
+                      Text ('Update your data :'),
                        TextButton(onPressed: () {Navigator.push(context,
                                MaterialPageRoute(builder: (context)=> Register()));
                            },
-                         child: Text ('Update information'),
+                         child: Text ('Update'),
                          ),],),
          ], ),
         ),
       ),
     ),),);
   }}
+
