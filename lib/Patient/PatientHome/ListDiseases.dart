@@ -3,20 +3,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 /// ------------------------ Fetch data from the DB -----------------------------
-Future<List<Disease>> fetchDiseases(Type client)async {
-  final response = await http.get(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/disease.json'));
-  return compute(parseDiseases,response.body);
-  //Disease.fromJson(jsonDecode(response.body));
-}
+
 List<Disease> parseDiseases (String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String ,dynamic>>();
   return parsed.map<Disease>((json)=> Disease.fromJson(json)).toList();
 }
+Future<List<Disease>> fetchDiseases(Type client)async {
+  final response = await http.get(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/disease.json'));
+  return compute(parseDiseases,response.body);
+}
 /// ------------------- Disease class -------------------------
 class Disease {
-  final String name;
-
+  final String name ;
   Disease( {required this.name});
 
   factory Disease.fromJson(Map<String, dynamic> json) {

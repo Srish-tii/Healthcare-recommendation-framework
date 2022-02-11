@@ -29,8 +29,7 @@ class SelectDisease extends State<Disease>{
       title: Text("Exit"),
       content: Text("Do you want to exit !"),
       actions: [
-        okButton,
-      ],
+        okButton,],
       elevation: 24.0,
       backgroundColor: Colors.blueGrey[200],
     );
@@ -41,7 +40,7 @@ class SelectDisease extends State<Disease>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar (title: Text('Activities')),
+      appBar: AppBar (title: Text('Disease Page')),
       body:Container(
         child: SingleChildScrollView(
           child :Padding (

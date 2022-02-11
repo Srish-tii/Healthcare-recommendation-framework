@@ -4,10 +4,10 @@ class QuizBrain {
   int _questionNumber = 0;
 
   List<Question> _questionBank = [
-    Question('Are you feel exhausted', true),
-    Question('You can practice more !.', false),
-    Question('Do you breath normally.', true),
-    Question('Do you feel good', true),
+    Question('Are you exhausted!', true),
+    Question('can you practice more !.', false),
+    Question('Do you breath normally!', true),
+    Question('Do you feel good!', true),
 
   ];
 

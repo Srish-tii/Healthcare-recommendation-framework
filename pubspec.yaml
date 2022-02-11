@@ -16,20 +16,27 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.3
-  english_words: ^4.0.0
   syncfusion_flutter_datepicker: ^19.3.48
   rflutter_alert: ^2.0.4
-# ---------------- Geolocation and Time dependencies -------------------
+
+# ------------------ Animation & Design ---------------------
+  animator: ^3.1.0
+  toggle_switch: ^1.3.0
+  slide_drawer: ^1.0.3
+
+# ---------------- Geolocation and Time dependencies ------------
+  location: ^4.2.0
   geolocator: ^7.6.1
   cupertino_icons: ^1.0.2
-  #location_permissions: ^3.0.0
+  location_permissions: ^3.0.0
   table_calendar: ^3.0.2
   syncfusion_flutter_calendar: ^19.2.62
-# --------------- firebase dependencies ------------------
+# --------------- firebase dependencies --------------------
   firebase_core: ^1.7.0
+  cloud_firestore: ^3.1.6
   firebase_database: ^8.0.0
   firebase_auth: ^3.1.2
-
+  firebase_dynamic_links: ^2.0.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -52,6 +59,12 @@ flutter:
     - assets/back5.jpg
     - assets/PatPrac.jpg
     - assets/vdoc3.jpg
+    - assets/images.jpg
+    - assets/disease.jpg
+    - assets/feedback2.png
+    - assets/prescription.jpg
+    - assets/sports.jpg
+    - assets/calendar.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

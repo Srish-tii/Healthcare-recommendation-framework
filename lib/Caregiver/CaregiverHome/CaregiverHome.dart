@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Caregiver/Screens/Prescription.dart';
+import 'package:rastreador/Patient/PatientHome/Progress.dart';
 import 'package:rastreador/main.dart';
 import 'PatientList.dart';
 
@@ -12,7 +13,7 @@ class Caregiverprofile extends StatefulWidget {
 }
 class _CaregiverProfile extends State<Caregiverprofile>{
   final _pwdController = TextEditingController();
-  final _fromKey = GlobalKey<FormState>();
+  final User? user = _auth.currentUser ;
   showAlertDialog(BuildContext context) {
     // set up the button
     // ignore: deprecated_member_use
@@ -35,10 +36,13 @@ class _CaregiverProfile extends State<Caregiverprofile>{
         return alert;
       },);}
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => DefaultTabController(
+    initialIndex: 1,
+    length : 2 ,
+    child : Scaffold(
       appBar: AppBar(
         title: Text('Caregiver profile'),
+        titleSpacing: 0,
         actions: <Widget>[
           Builder(builder: (BuildContext context) {
             // ignore: deprecated_member_use
@@ -62,48 +66,115 @@ class _CaregiverProfile extends State<Caregiverprofile>{
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(uid + ' has successfully signed out.'),
                 ));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context)=> MyApp()));
               },);}),],
+        elevation : 0,
+        flexibleSpace: Container(
+          height: 300,
+          width: double.infinity,
+          decoration: new BoxDecoration(
+            color: const Color(0xff7c94b6),
+            image :DecorationImage(image:AssetImage('assets/images.jpg'),
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              fit: BoxFit.cover),
+        ),
       ),
-      body: Builder(builder :(BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          child: Form(
-            key: _fromKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container (
-                  height: 325,
-                  width: double.infinity,
-                  decoration: BoxDecoration(image: DecorationImage(image:AssetImage('assets/vdoc3.jpg'),
-                      fit: BoxFit.fill)),
-                ),
-                Text('Caregiver Profile ', style: Theme.of(context).textTheme.headline6,),
-                RichText(
-                  text: TextSpan(
-                    text: 'Caregiver Name ',
-                    children: const <TextSpan>[
-                      TextSpan(text: 'Doctor/ Coach', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blueGrey),),],),),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child:ElevatedButton(
-                    child: Text('Patient Lists'),
-                    onPressed: () {Navigator.push(context,
-                        MaterialPageRoute(
-                        builder: (context) => PatientList()));},),),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child:ElevatedButton(
-                    child: Text('Add New patient'),
-                    onPressed: () {showAlertDialog(context);},),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child:ElevatedButton(
-                    child: Text('Give Prescription'),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DoctPrescription()));},),),],),),);},),
-      );
-  }}
+      bottom: TabBar(
+        indicatorColor: Colors.brown,
+        indicatorWeight: 5,
+        tabs :<Widget>[
+          Tab(icon: Icon(Icons.home),text:"Home"),
+          Tab(icon: Icon(Icons.list_alt_outlined),text:"Patients"),
+        ],
+      ),
+      ),
+      body:TabBarView(
+          children :<Widget>[
+            Container(
+            child :SingleChildScrollView(
+            child : Builder(builder :(BuildContext context) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                  child: Form(
+                    child:  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                      IconButton( icon: Icon(Icons.face,
+                        color:Theme.of(context).primaryColor ,
+                        size: 50),
+                        onPressed: (){ Navigator.push(context,
+                         MaterialPageRoute(builder: (context)=> MyApp()));}
+                      ),
+                      SizedBox(height : 10),
+                       /* Text ('Welcome,'+ user!.uid ,style: TextStyle(
+                        fontSize: 25.0,
+                        color:Colors.blueGrey,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.w400
+                        ),),*/
+                      SizedBox(height: 10,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children :[
+                        Card(color: Colors.blueGrey,
+                          shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),),
+                          child : Stack(
+                              alignment: Alignment.center,
+                              children: [
+                              Ink.image(image:  AssetImage('assets/vdoc3.jpg'),width:double.infinity,height:200 ,
+                              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                              child: InkWell(onTap: ()  {Navigator.push(context,
+                              MaterialPageRoute(builder: (context)=> DoctPrescription()));}),
+                              fit: BoxFit.cover,),
+                              Text ('Prescriptions', style :TextStyle(fontWeight:FontWeight.bold,
+                            color: Colors.black, fontSize: 24 ),),
+                          ], ),),],),
+                      SizedBox(height: 10,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children :[
+                              Card(color: Colors.blueGrey,
+                              shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),),
+                                child : Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                  Ink.image(image:  AssetImage('assets/back4.jpg'),width:double.infinity,height:200 ,
+                                    colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                                    child: InkWell(onTap: ()  {Navigator.push(context,
+                                    MaterialPageRoute(builder: (context)=> PatientList()));}),
+                                    fit: BoxFit.cover,),
+                                    Text ('Patient Progress', style :TextStyle(fontWeight:FontWeight.bold,
+                                  color: Colors.white, fontSize: 24 ),),
+  ], ),),],),
+  ],),),);
+            }),),),
+                        Container (
+                            child : Padding (padding:EdgeInsets.all(12),
+                            child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                            Card(
+                              color: Colors.blueGrey,
+                              shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),),
+                                child : Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Ink.image(image:  AssetImage('assets/caregiver.png'),width:double.infinity,height:200 ,
+                                  colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.dstATop),
+                                  child: InkWell(onTap: ()  {Navigator.push(context,
+                                  MaterialPageRoute(builder: (context)=> PatientProgress()));}),
+                                  fit: BoxFit.cover,),
+                                  Text("Consult Cases" , style :TextStyle(fontWeight:FontWeight.bold,
+                                  color: Colors.black, fontSize: 24 ), ),
+                        ],),),],),),),
+                       ],),),);
+  }
 
 

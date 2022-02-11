@@ -1,12 +1,21 @@
+/// ************************** Old version of the patient registration page with realtime database *************************
 import 'dart:convert' ;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart' ;
 import 'package:flutter/material.dart' ;
 import 'package:rastreador/Patient/Authentication/Login.dart' ;
 import '../../main.dart' ;
 import 'package:http/http.dart' as http ;
 import 'package:geolocator/geolocator.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 /// ---------------------- Subscription Page ----------------------------
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
+  @override
+  RegisterPatient createState (){return RegisterPatient();}
+}
+class RegisterPatient  extends State<Register> {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
@@ -16,6 +25,20 @@ class Register extends StatelessWidget {
   final _phoneController = TextEditingController() ;
   final _ageController = TextEditingController();
   final _addressController = TextEditingController();
+  String _gander = "" ;
+  bool _success = false;
+  /// register email and password patient
+  void _register() async {
+    final User? user = (await
+    _auth.createUserWithEmailAndPassword(
+      email: _emailController.text,
+      password: _pwdController.text,
+    )).user;
+    if (user != null) {
+      setState(() {
+        _success = true;
+      });}
+  }
   showAlertDialog(BuildContext context) {
     /// set up the button
     Widget okButton = TextButton(
@@ -148,6 +171,28 @@ class Register extends StatelessWidget {
                         hintText: 'Age  ',
                         border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.account_circle),),),),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Text("Gender", style :TextStyle(fontWeight:FontWeight.bold,
+                        color: Colors.blueGrey, fontSize: 15 ),),),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: ToggleSwitch(
+                      minWidth: 90.0,
+                      initialLabelIndex: 1,
+                      cornerRadius: 20.0,
+                      activeFgColor: Colors.white,
+                      inactiveBgColor: Colors.grey,
+                      inactiveFgColor: Colors.white,
+                      totalSwitches: 2,
+                      labels: ['Male', 'Female'],
+                      icons: [Icons.female, Icons.male],
+                      activeBgColors: [[Colors.blue],[Colors.pink]],
+                      onToggle: (index) {
+                        if(index == 0)
+                        { _gander = "Female";}
+                        else { _gander = "Male";}
+                      },),),
 
                   Padding(
                     padding: const EdgeInsets.all(3.0),
@@ -218,10 +263,12 @@ class Register extends StatelessWidget {
                           data.add(age);
                           data.add (phone);
                           data.add(address);
+                          data.add(_gander);
                           data.add(email);
                           data.add(pwd);
                           http.Response res = await createPatient(data) ;
                           if(res.statusCode == 200) {
+                            _register();
                             _determinePosition() ;
                             AlertDialog show = AlertDialog(
                               title: Text("Congrats for joining us"),
@@ -299,8 +346,8 @@ Future<http.Response> createPatient(List<String> data) {
       "phone" : data[3],
       "address" : data[4],
       "email" : data[5],
-      "password" : "",
-      "gender" : " " ,
+      "password" :data[6],
+      "gender" : data[7] ,
       "id_disease" : " ",
       "id_location" : " ",
       "id_patient" : " ",

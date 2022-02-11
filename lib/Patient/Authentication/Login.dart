@@ -1,25 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
-import 'package:rastreador/Patient/PatientHome/PractTime.dart';
 import '../../main.dart';
 import 'Register.dart';
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 //  --------------------------- Log in page ---------------------------------
 class Login extends StatefulWidget {
- @override
-  LoginPatient createState() => LoginPatient() ;
+  @override
+  LoginPatient createState() => LoginPatient();
 }
-  class LoginPatient extends State<Login>{
+class LoginPatient extends State<Login>  {
   final  _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _success = false ;
+  String _userEmail = "" ;
+// -----------------------Test  firebase --------------------------------
 
-  bool _success = true;
-  String _userEmail= "";
-// -----------------------Test  firebase -----------------------------------
   // ignore: non_constant_identifier_names
   UserNotExist() async {
     build(BuildContext context){
@@ -58,6 +58,7 @@ class Login extends StatefulWidget {
         ],
       ); }
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('LogIn')),
@@ -73,8 +74,7 @@ class Login extends StatefulWidget {
                   IconButton(icon: Icon(Icons.home, color: Theme
                       .of(context)
                       .primaryColor), onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => PatientProfile()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                   },
                   ),
                   SizedBox(height: 10),
@@ -85,22 +85,16 @@ class Login extends StatefulWidget {
                   Text("Sign in to continue",
                     style: TextStyle(fontSize: 14, color: Colors.blueGrey),),
                   SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
-                      controller: _emailController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Enter your Email';
-                        }
-                        return null ;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'E-mail',
-                        hintText: 'E-mail',
-                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.email),
-                      ),),),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'E-mail',
+                      hintText: 'E-mail',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                  ),
                   SizedBox(height: 30),
                   TextFormField(
                     controller: _passwordController,
@@ -123,21 +117,26 @@ class Login extends StatefulWidget {
                   ),
                   SizedBox(height: 30),
                   MaterialButton(
-                      onPressed: () async {
+                      onPressed: () async{
                         if (_formKey.currentState!.validate()) {
-                        final User? user = (await _auth.createUserWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text,)).user;
-                        if (user != null) {
-                        setState(() {
-                        _success = true;
-                        _userEmail = user.email!;
-                        });} else {
-                        setState(() {
-                        _success = true;
-                        });}}
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => PatientProfile()));
-                        },
+                          final User? user =
+                              (await _auth.signInWithEmailAndPassword(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              )).user;
+                          if (user != null) {
+                            setState(() {
+                              _success = true;
+                              _userEmail = user.email!;
+                            });
+                          } else {
+                            setState(() {
+                              _success = false;
+                            });
+                          }
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context)=> PatientProfile()));
+                        }},
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme
@@ -152,7 +151,6 @@ class Login extends StatefulWidget {
                             .bold),
                       )
                   ),
-                  SizedBox(height: 20),
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -164,9 +162,8 @@ class Login extends StatefulWidget {
                           ? 'Successfully signed in ' + _userEmail
                           : 'Sign in failed'),
                       style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                  SizedBox(height: 20,),
+                    ),),
+                  SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
 
@@ -187,5 +184,11 @@ class Login extends StatefulWidget {
           ),),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

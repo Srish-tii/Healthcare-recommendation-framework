@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http ;
 
-/// --------------------------- Add new Activity page ------------------------------
+///--------------------------- Add new Activity page ------------------------------
 class WriteActivity extends StatefulWidget{
   @override
   _AddActivity createState() => _AddActivity();
@@ -15,7 +15,6 @@ class _AddActivity extends State<WriteActivity>{
   final _actname = TextEditingController();
   final _actype = TextEditingController();
   final _actlocation = TextEditingController();
-
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
@@ -41,7 +40,6 @@ class _AddActivity extends State<WriteActivity>{
         context: context,
         builder: (BuildContext context) => alert );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,13 +129,13 @@ class _AddActivity extends State<WriteActivity>{
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextButton(
-                                onPressed:()=> {//Navigator.push(context, MaterialPageRoute(builder: (context)=> Activities())),
+                                onPressed:()=> {Navigator.push(context, MaterialPageRoute(builder: (context)=> PatientProfile())),
                                 }, child: Text("Ok"),
                               ),
                               SizedBox(width: 10,),
                               TextButton(
                                 onPressed:() => {Navigator.push(context,
-                                    MaterialPageRoute(builder: (context)=> MyApp())),},
+                                    MaterialPageRoute(builder: (context)=> PatientProfile())),},
                                 child: Text("exit"),),
                             ],  ),  ] ,
                         elevation: 24.0,
@@ -156,7 +154,6 @@ class _AddActivity extends State<WriteActivity>{
                       ),
                       child: Text("Save" ,
                         style: TextStyle(fontSize: 15, fontWeight :FontWeight.bold),)),
-
                 ],),),),),),
     );
   }

@@ -1,24 +1,45 @@
-import 'dart:convert';
+import 'dart:convert' ;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:rastreador/Caregiver/Authentication/Login.dart';
-import '../../main.dart';
-import 'package:http/http.dart' as http ;
+import 'package:flutter/cupertino.dart' ;
+import 'package:flutter/material.dart' ;
+import 'package:rastreador/Patient/Authentication/Login.dart' ;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../main.dart' ;
+import 'package:toggle_switch/toggle_switch.dart';
 
-// ---------------------------- Coach Subscription Page -------------------------------
-class RegistrationCoach extends StatelessWidget {
+class AddPatient extends StatefulWidget {
+  @override
+  RegisterPatient createState (){return RegisterPatient();}
+}
+class RegisterPatient extends State<AddPatient> {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
-  final _fname = TextEditingController();
-  final _lname = TextEditingController();
   final _email = TextEditingController();
+  final _firstname = TextEditingController();
+  final _lastname = TextEditingController();
+  final _phone= TextEditingController() ;
+  final _age = TextEditingController();
   final _address = TextEditingController();
-  final _phone = TextEditingController();
+  String _gander = "" ;
+  bool _success = false;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  /// register email and password patient
+  void _register() async {
+    final User? user = (await
+    _auth.createUserWithEmailAndPassword(
+      email: _email.text,
+      password: _pwdController.text,
+    )).user;
+    if (user != null) {
+      setState(() {
+        _success = true;
+      });}
+  }
   showAlertDialog(BuildContext context) {
-    // set up the button
+    /// set up the button
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
           padding: const EdgeInsets.all(16.0),
@@ -37,11 +58,14 @@ class RegistrationCoach extends StatelessWidget {
       ],
       elevation: 24.0,
       backgroundColor: Colors.blueGrey[200],
-    );
+    );// show the dialog
     showDialog(
         context: context,
         builder: (BuildContext context) => alert );
   }
+  // Create a CollectionReference called coaches that references the firestore collection
+  CollectionReference patient = FirebaseFirestore.instance.collection('Patient');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +88,7 @@ class RegistrationCoach extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      controller: _fname,
+                      controller: _firstname,
                       validator: (value){
                         if (value!.isEmpty){
                           return 'Your first name cannot be empty';
@@ -81,7 +105,7 @@ class RegistrationCoach extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
-                      controller: _lname,
+                      controller: _lastname,
                       validator: (value){
                         if (value!.isEmpty){
                           return 'Your last name cannot be empty';
@@ -99,28 +123,82 @@ class RegistrationCoach extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: _phone,
+                    child :TextFormField(
+                      controller: _address,
                       validator: (value){
                         if (value!.isEmpty){
-                          return 'Phone cannot be empty !';
-                        }
-                        if (value.length < 8){
-                          return 'Phone cannot be less than 8 numbers !';
-                        }else
-                        if (value.length > 8){
-                          return 'Phone cannot be upper than 8 numbers !';
+                          return 'User Address cannot be empty';
                         }
                         return null ;
                       },
                       decoration: InputDecoration(
-                        labelText: 'Phone',
-                        hintText: 'Enter your phone number',
-                        border : OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.phone_android_sharp),
+                        labelText: 'Address',
+                        hintText: 'Address',
+                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.home_work_outlined),
                       ),),),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child :TextFormField(
+                      controller : _phone ,
+                      validator: (value){
+                        if (value!.isEmpty){
+                          return 'User phone number cannot be empty';
+                        }else if (value.length < 8 ){
+                          return 'Phone number must contains 8 Numbers !';
+                        }else if(value.length > 8){
+                          return 'Phone number must contains only 8 Numbers !';
+                        }
+                        return null ;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Phone ',
+                        hintText: '+216  ',
+                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.phone_android),),),),
+                  // n// new Divider(height: 5.0, color: Colors.bl//------------- Select gender of user (radio) ---------------
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child :TextFormField(
+                      controller :_age,
+                      validator: (value){
+                        if (value!.isEmpty){
+                          return 'Age cannot be empty';
+                        }else if (value.length <2){
+                          return 'Age must contains only 2 Numbers !';
+                        }else if(value.length >2){
+                          return 'Age must contains only 2 Numbers !';
+                        }
+                        return null ;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Age ',
+                        hintText: 'Age  ',
+                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.account_circle),),),),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Text("Gender", style :TextStyle(fontWeight:FontWeight.bold,
+                        color: Colors.blueGrey, fontSize: 15 ),),),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: ToggleSwitch(
+                      minWidth: 90.0,
+                      initialLabelIndex: 1,
+                      cornerRadius: 20.0,
+                      activeFgColor: Colors.white,
+                      inactiveBgColor: Colors.grey,
+                      inactiveFgColor: Colors.white,
+                      totalSwitches: 2,
+                      labels: ['Male', 'Female'],
+                      icons: [Icons.male, Icons.female],
+                      activeBgColors: [[Colors.blue],[Colors.pink]],
+                      onToggle: (index) {
+                        if(index == 0)
+                        { _gander = "Female";}
+                        else { _gander = "Male";}
+                      },),),
+
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :TextFormField(
@@ -133,7 +211,7 @@ class RegistrationCoach extends StatelessWidget {
                       },
                       decoration: InputDecoration(
                         labelText: 'E-mail',
-                        hintText: 'Put your E-mail name',
+                        hintText: 'Put your E-mail',
                         border : OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.email),
@@ -175,61 +253,23 @@ class RegistrationCoach extends StatelessWidget {
                       ),
                     ),),
                   SizedBox(height: 10),
-                  MaterialButton(
-                      onPressed: () async {
-                        if(_fromKey.currentState!.validate()){
-                          List<String> data = [];
-                          String fname = _fname.text ;
-                          String lname = _lname.text ;
-                          String address = _address.text ;
-                          String phone = _phone.text ;
-                          String emails = _email.text ;
-                          String location = _determinePosition() as String ;
-                          data.add(fname) ;
-                          data.add(lname);
-                          data.add (phone);
-                          data.add(address);
-                          data.add(emails);
-                          data.add(location);
-                          http.Response res = await createCoach(data) ;
-                          try {
-                            UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                email: emails, password: _pwdController.text);
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == 'weak-password') {
-                              print('The password provided is too weak.');
-                            } else if (e.code == 'email-already-in-use') {
-                              print('The account already exists for that email.');
-                            }
-                          } catch (e) {
-                            print(e);
-                          }
-                          if(res.statusCode == 200) {
-                            AlertDialog show = AlertDialog(
-                              title: Text("Congrats for joining us"),
-                              content: Text("Do you want to continue to your profile !"),
-                              actions: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextButton(
-                                      onPressed:()=> {Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> LogIn())),
-                                      }, child: Text("Ok"),
-                                    ),
-                                    SizedBox(width: 10,),
-                                    TextButton(
-                                      onPressed:() => {Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> MyApp())),},
-                                      child: Text("exit"),),
-                                  ],  ),  ] ,
-                              elevation: 24.0,
-                              backgroundColor: Colors.blueGrey[200],
-                            );
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) => show );
-                          }}},
+                  MaterialButton(onPressed : ()async {
+                    if(_fromKey.currentState!.validate()){
+                      patient
+                          .add({
+                        'first_name': _firstname.text,
+                        'last_name': _lastname.text,
+                        'address' : _address.text,
+                        'age' : _age.text ,
+                        'gender' : _gander.toString(),
+                        'phone': _phone.text,
+                        'email' : _email.text,
+                        'password' : _pwdController.text,
+                        'phone': _phone.text
+                      })
+                          .then((value) => print("patient created "))
+                          .catchError((error) => print("Failed to add patient: $error"));
+                    }},
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme.of(context).primaryColor,
@@ -239,7 +279,8 @@ class RegistrationCoach extends StatelessWidget {
                       ),
                       child: Text("Submit" ,
                         style: TextStyle(fontSize: 15, fontWeight :FontWeight.bold),)),
-                  SizedBox (height: 20,),
+
+                  SizedBox(height: 20),
                   ElevatedButton.icon(
                     label: Text('Exit'),
                     icon: Icon(Icons.exit_to_app),
@@ -247,7 +288,8 @@ class RegistrationCoach extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.greenAccent),
                     ),
                     onPressed: () {
-                      showAlertDialog(context);},
+                      showAlertDialog(context);
+                    },
                   ),
                   SizedBox(height: 20),
                   Row(
@@ -256,28 +298,8 @@ class RegistrationCoach extends StatelessWidget {
                       Text("Already have an account ?"),
                       SizedBox(width: 20),
                       TextButton(onPressed: () {Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=> LogIn()));
+                          MaterialPageRoute(builder: (context)=> Login()));
                       },
                         child: Text("Login"),
-                      ),], ),],),),),),),);
-  }
-}
-// --------------------- Coach location with permission  -----------------------
-Future<Position> _determinePosition() async {
-  return await Geolocator.getCurrentPosition();}
-// ----------------------------- Send Data to database --------------------------------------
-Future<http.Response> createCoach(List<String> data) async{
-  return http.post(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'),
-    headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8',},
-    body: jsonEncode(<String, String>
-    {
-      "first name" : data[0],
-      "last name" : data[1],
-      "phone" : data[2],
-      "address" : data[3],
-      "email" : data[4],
-      "id_location" : data[5],
-      "id_patient" : " ",
-    }),
-  );
-}
+                      ),], ),],),),),),),);}}
+/// *******************************************************************

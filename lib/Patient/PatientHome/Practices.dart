@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/PatientHome/PractTime.dart';
@@ -7,10 +8,10 @@ import 'ListActivities.dart';
 
 
 /// ------------------------- Set time of practicing and select activities  ----------------------
-class Activities  extends StatefulWidget {
-  _activities createState ()=> _activities() ;
+class Practices  extends StatefulWidget {
+  _PracActivities createState ()=> _PracActivities() ;
 }
-class _activities extends State <Activities> {
+class _PracActivities extends State <Practices> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +39,10 @@ class _activities extends State <Activities> {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child :SizedBox(height: 500, width: 335,
-                    child :Text('Select practicing Time,'
-                        '', textAlign: TextAlign.center ,
-                      style: TextStyle(fontWeight: FontWeight.bold,
-                          color: Colors.black.withOpacity(1.0)),),
+                      child :Text('Select practicing Time,'
+                          '', textAlign: TextAlign.center ,
+                        style: TextStyle(fontWeight: FontWeight.bold,
+                            color: Colors.black.withOpacity(1.0)),),
                     ) , ),
                   TextButton(onPressed: () {Navigator.push(context,
                       MaterialPageRoute(builder: (context)=> PractTime()));

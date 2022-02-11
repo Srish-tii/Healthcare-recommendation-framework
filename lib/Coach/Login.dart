@@ -3,48 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Coach/CoachRegistration.dart';
-import 'package:rastreador/Caregiver/CaregiverHome/CaregiverHome.dart';
+import 'package:rastreador/Coach/CoachHome.dart';
 import '../../main.dart';
-/// ----------------------- getting Caregiver account data ----------------------
-/*List<Caregiver> parseCaregivers(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  return parsed.map<Caregiver>((json) =>Caregiver.fromJson(json)).toList();
-}
-Future<Caregiver> fetchCaregiver() async {
-  final response = await http.get(Uri.parse(('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json')));
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response, then parse the JSON.
-    return Caregiver.fromJson(jsonDecode(response.body));
-    //parseCaregivers(response.body);
-  } else {
-    throw Exception('Failed to load caregiver');
-  }
-}
-class Caregiver {
-  final String email;
-  final String password;
-  Caregiver({
-    required this.email,
-    required this.password,
-  });
-  factory Caregiver.fromJson(Map<String, dynamic> json) {
-    return Caregiver(
-      email: json['email'],
-      password: json['password'],
-    );
-  }
-}*/
+
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 /// -------------------- caregiver login page using rest API ----------
-class LogIn extends StatefulWidget {
+class CLogin extends StatefulWidget {
   //final Future<List<Caregiver>> caregivers;
- // const LogIn(List<String> data, {Key? key, required this.caregivers}) : super(key: key );
+  // const LogIn(List<String> data, {Key? key, required this.caregivers}) : super(key: key );
   @override
-  CaregiverLogin createState() => CaregiverLogin();
+  CoachLogin createState() => CoachLogin();
 
 }
-
-class  CaregiverLogin extends State<LogIn> {
+class  CoachLogin extends State<CLogin> {
   final  _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -71,7 +43,7 @@ class  CaregiverLogin extends State<LogIn> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('LogIn')),
+      appBar: AppBar(title: Text('Coach Login')),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -132,7 +104,7 @@ class  CaregiverLogin extends State<LogIn> {
                     ),
                   ),
                   SizedBox(height: 30),
-/// ******************************** Test Caregiver data  ***********************************
+                  /// ******************************** Test Caregiver data  ***********************************
                   MaterialButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
@@ -155,7 +127,7 @@ class  CaregiverLogin extends State<LogIn> {
                         }
                         Navigator.push(context,
                             MaterialPageRoute(
-                                builder: (context) => Caregiverprofile()));
+                                builder: (context) => Coachprofile()));
                       },
                       height: 50,
                       minWidth: double.infinity,
