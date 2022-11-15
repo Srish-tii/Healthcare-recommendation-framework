@@ -4,14 +4,17 @@ import 'package:rastreador/Patient/Feedback/Quiz.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+
 /// ***************** Intialization questions lists*********************
 QuizBrain quizBrain = QuizBrain();
+
 class FeedbackPage extends StatefulWidget {
   @override
   PatientFeedback createState() => PatientFeedback();
 }
+
 ///  ------------------------ Feedback -------------------------
-class PatientFeedback extends State<FeedbackPage>{
+class PatientFeedback extends State<FeedbackPage> {
   List<Icon> scoreKeeper = [];
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
@@ -50,7 +53,7 @@ class PatientFeedback extends State<FeedbackPage>{
                 "Save",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              onPressed: () => Navigator.pop(context,true),
+              onPressed: () => Navigator.pop(context, true),
               color: Color.fromRGBO(0, 179, 134, 1.0),
               radius: BorderRadius.circular(0.0),
             ),
@@ -78,8 +81,8 @@ class PatientFeedback extends State<FeedbackPage>{
       }
     });
   }
-  @override
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,9 +108,11 @@ class PatientFeedback extends State<FeedbackPage>{
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             // ignore: deprecated_member_use
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green,
+            child: TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.green),
+              ),
               onPressed: () {
                 checkAnswer(true);
               },
@@ -124,9 +129,13 @@ class PatientFeedback extends State<FeedbackPage>{
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.red,
+            child: TextButton(
+              // textColor: Colors.white,
+              // color: Colors.red,
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.red),
+              ),
               onPressed: () {
                 checkAnswer(false);
               },
@@ -139,21 +148,22 @@ class PatientFeedback extends State<FeedbackPage>{
               ),
             ),
           ),
-
         ),
         Column(
           children: [
             Row(
               children: scoreKeeper,
             ),
-            TextButton(onPressed: (){
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context)=> PatientProfile()));
-
-            },
-              child: Text('Finish') ,)
+            TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PatientProfile()));
+              },
+              child: Text('Finish'),
+            )
           ],
         ),
-      ],);
+      ],
+    );
   }
 }

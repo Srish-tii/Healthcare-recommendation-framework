@@ -9,5 +9,4 @@ import 'package:flutter/material.dart';
 
 import 'package:rastreador/main.dart';
 
-void main() {
-}
+void main() {}
