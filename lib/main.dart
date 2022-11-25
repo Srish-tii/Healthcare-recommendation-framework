@@ -2,15 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Coach/CoachRegistration.dart';
-import 'package:rastreador/Caregiver/Authentication/DoctorRegistration.dart';
-import 'package:rastreador/Caregiver/Authentication/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'Coach/AddCoach.dart';
-import 'Coach/Login.dart';
-import 'Patient/Authentication/AddPatient.dart';
-import 'Patient/Authentication/Login.dart';
-import 'Patient/Authentication/Register.dart';
 import 'Patient/Information.dart';
 import 'package:location/location.dart';
 import 'UserDescription.dart';
@@ -59,7 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("Patient Tracker"),
       ),
       body: Container(
-        //constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           color: const Color(0xff7c94b6),
           image: DecorationImage(
@@ -67,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(45.0),
             child: Form(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,108 +69,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     imageString: 'assets/trackingpt.png',
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddPatient()));
-                          },
-                          child: Text("Create New Account",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                        Text(' Or'),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Login()));
-                          },
-                          child: Text("Login ",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // UserAccount(NewUser: AddPatient, Login: Login),
+                  UserAccount(user: 'patient', text: 'Create Patient Account'),
                   SizedBox(height: 20),
                   UserDescription(
                     content:
                         'Get start with our application to consult your patients health and give your prescription .',
                     imageString: 'assets/caregiver.png',
                   ),
+                  SizedBox(height: 10),
+                  UserAccount(user: 'doctor', text: 'Create Doctor Account'),
                   SizedBox(height: 20),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 10),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        RegistrationDoctor()));
-                          },
-                          child: Text("Create Doctor Account",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                        Text("Or"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LogIn()));
-                          },
-                          child: Text("Login",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15),
                   UserDescription(
                     content:
                         'Get start with our application, consult your patients activities progress and give recommendation.',
                     imageString: 'assets/healthcare.png',
                   ),
-                  SizedBox(height: 15),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 10),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddCoach()));
-                          },
-                          child: Text("Create Coach Account",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                        Text("Or"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CLogin()));
-                          },
-                          child: Text("Login",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  SizedBox(height: 10),
+                  UserAccount(user: 'coach', text: 'Create Coach Account'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
