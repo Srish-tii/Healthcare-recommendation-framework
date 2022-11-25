@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Caregiver/Screens/Prescription.dart';
+import 'package:rastreador/Doctor/Screens/Prescription.dart';
 import 'package:rastreador/Patient/PatientHome/Progress.dart';
 import 'package:rastreador/main.dart';
 import 'PatientList.dart';

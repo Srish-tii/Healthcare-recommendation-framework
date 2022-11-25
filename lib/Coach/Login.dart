@@ -1,27 +1,24 @@
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Coach/CoachRegistration.dart';
 import 'package:rastreador/Coach/CoachHome.dart';
 import '../../main.dart';
 
-
 final FirebaseAuth _auth = FirebaseAuth.instance;
+
 /// -------------------- caregiver login page using rest API ----------
 class CLogin extends StatefulWidget {
-  //final Future<List<Caregiver>> caregivers;
-  // const LogIn(List<String> data, {Key? key, required this.caregivers}) : super(key: key );
   @override
   CoachLogin createState() => CoachLogin();
-
 }
-class  CoachLogin extends State<CLogin> {
-  final  _formKey = GlobalKey<FormState>();
+
+class CoachLogin extends State<CLogin> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _success = true;
-  String _userEmail= "";
+  String _userEmail = "";
   /*late Future<Caregiver> futureCaregiver;
   @override
   void initState() {
@@ -53,36 +50,44 @@ class  CoachLogin extends State<CLogin> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  IconButton(icon: Icon(Icons.home, color: Theme
-                      .of(context)
-                      .primaryColor), onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyApp()));
-                  },),
+                  IconButton(
+                    icon:
+                        Icon(Icons.home, color: Theme.of(context).primaryColor),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyApp()));
+                    },
+                  ),
                   SizedBox(height: 10),
-                  Text("Welcome ", style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),),
+                  Text(
+                    "Welcome ",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 10),
-                  Text("Sign in to continue",
-                    style: TextStyle(fontSize: 14, color: Colors.blueGrey),),
+                  Text(
+                    "Sign in to continue",
+                    style: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                  ),
                   SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
+                    child: TextFormField(
                       controller: _emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Enter your Email';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'E-mail',
                         hintText: 'E-mail',
-                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.email),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 30),
                   TextFormField(
                     controller: _passwordController,
@@ -104,16 +109,17 @@ class  CoachLogin extends State<CLogin> {
                     ),
                   ),
                   SizedBox(height: 30),
+
                   /// ******************************** Test Caregiver data  ***********************************
                   MaterialButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          final User? user = (await
-                          _auth.createUserWithEmailAndPassword(
+                          final User? user =
+                              (await _auth.createUserWithEmailAndPassword(
                             email: _emailController.text,
                             password: _passwordController.text,
-                          )
-                          ).user;
+                          ))
+                                  .user;
                           if (user != null) {
                             setState(() {
                               _success = true;
@@ -125,18 +131,23 @@ class  CoachLogin extends State<CLogin> {
                             });
                           }
                         }
-                        Navigator.push(context,
+                        Navigator.push(
+                            context,
                             MaterialPageRoute(
                                 builder: (context) => Coachprofile()));
                       },
                       height: 50,
                       minWidth: double.infinity,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                      child: Text("login", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        "login",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -145,17 +156,21 @@ class  CoachLogin extends State<CLogin> {
                       SizedBox(width: 5),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationCoach()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegistrationCoach()));
                         },
                         child: Text("Register"),
                       ),
-                    ],),
-                ],),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),),
+          ),
+        ),
       ),
     );
   }
 }
-
-

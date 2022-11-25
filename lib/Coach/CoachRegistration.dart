@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:rastreador/Caregiver/Authentication/Login.dart';
+import 'package:rastreador/Doctor/Authentication/Login.dart';
 import '../main.dart';
-import 'package:http/http.dart' as http ;
+import 'package:http/http.dart' as http;
 
 // ---------------------------- Coach Subscription Page -------------------------------
 class RegistrationCoach extends StatelessWidget {
@@ -25,8 +25,10 @@ class RegistrationCoach extends StatelessWidget {
           primary: Colors.white,
           textStyle: const TextStyle(fontSize: 20)),
       child: Text("OK"),
-      onPressed: (){ Navigator.push(context,
-          MaterialPageRoute(builder: (context)=> MyApp()));},
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyApp()));
+      },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -38,60 +40,67 @@ class RegistrationCoach extends StatelessWidget {
       elevation: 24.0,
       backgroundColor: Colors.blueGrey[200],
     );
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => alert );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Coach Account"),),
-      body:SafeArea(
+      appBar: AppBar(
+        title: Text("Create Coach Account"),
+      ),
+      body: SafeArea(
         child: SingleChildScrollView(
-          child :Padding (
+          child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
               key: _fromKey,
-              child : Column (
+              child: Column(
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  IconButton( icon:Icon(Icons.home , color:Theme.of(context).primaryColor) ,
-                    onPressed: (){Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=> MyApp())); },
+                  IconButton(
+                    icon:
+                        Icon(Icons.home, color: Theme.of(context).primaryColor),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyApp()));
+                    },
                   ),
-                  SizedBox(height : 10),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
                       controller: _fname,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Your first name cannot be empty';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'First Name',
                         hintText: 'Put your first name',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.person),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
+                    child: TextFormField(
                       controller: _lname,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Your last name cannot be empty';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Last Name',
                         hintText: 'Put your last name',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.person),
                       ),
@@ -101,182 +110,235 @@ class RegistrationCoach extends StatelessWidget {
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
                       controller: _phone,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Phone cannot be empty !';
                         }
-                        if (value.length < 8){
+                        if (value.length < 8) {
                           return 'Phone cannot be less than 8 numbers !';
-                        }else
-                        if (value.length > 8){
+                        } else if (value.length > 8) {
                           return 'Phone cannot be upper than 8 numbers !';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Phone',
                         hintText: 'Enter your phone number',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.phone_android_sharp),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
+                    child: TextFormField(
                       controller: _email,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'User E-mail cannot be empty';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'E-mail',
                         hintText: 'Put your E-mail name',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.email),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
+                    child: TextFormField(
                       obscureText: true,
                       controller: _pwdController,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Password cannot be empty !';
-                        }else if (value.length < 6){
+                        } else if (value.length < 6) {
                           return 'Password must be at least 6 characters long !';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter your password',
-                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.lock_outline),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
+                    child: TextFormField(
                       obscureText: true,
                       controller: _confpwdController,
-                      validator: (value){
-                        if (value != _pwdController.value.text){
-                          return 'password do not match !';}
-                        return null ;
+                      validator: (value) {
+                        if (value != _pwdController.value.text) {
+                          return 'password do not match !';
+                        }
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Confirm Password',
                         hintText: 'Confirm Password',
-                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.lock),
                       ),
-                    ),),
+                    ),
+                  ),
                   SizedBox(height: 10),
                   MaterialButton(
                       onPressed: () async {
-                        if(_fromKey.currentState!.validate()){
+                        if (_fromKey.currentState!.validate()) {
                           List<String> data = [];
-                          String fname = _fname.text ;
-                          String lname = _lname.text ;
-                          String address = _address.text ;
-                          String phone = _phone.text ;
-                          String emails = _email.text ;
-                          String location = _determinePosition() as String ;
-                          data.add(fname) ;
+                          String fname = _fname.text;
+                          String lname = _lname.text;
+                          String address = _address.text;
+                          String phone = _phone.text;
+                          String emails = _email.text;
+                          String location = _determinePosition() as String;
+                          data.add(fname);
                           data.add(lname);
-                          data.add (phone);
+                          data.add(phone);
                           data.add(address);
                           data.add(emails);
                           data.add(location);
-                          http.Response res = await createCoach(data) ;
+                          http.Response res = await createCoach(data);
                           try {
-                            UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                email: emails, password: _pwdController.text);
+                            UserCredential userCredential = await FirebaseAuth
+                                .instance
+                                .createUserWithEmailAndPassword(
+                                    email: emails,
+                                    password: _pwdController.text);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');
                             } else if (e.code == 'email-already-in-use') {
-                              print('The account already exists for that email.');
+                              print(
+                                  'The account already exists for that email.');
                             }
                           } catch (e) {
                             print(e);
                           }
-                          if(res.statusCode == 200) {
+                          if (res.statusCode == 200) {
                             AlertDialog show = AlertDialog(
                               title: Text("Congrats for joining us"),
-                              content: Text("Do you want to continue to your profile !"),
+                              content: Text(
+                                  "Do you want to continue to your profile !"),
                               actions: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextButton(
-                                      onPressed:()=> {Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> LogIn())),
-                                      }, child: Text("Ok"),
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => LogIn())),
+                                      },
+                                      child: Text("Ok"),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     TextButton(
-                                      onPressed:() => {Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> MyApp())),},
-                                      child: Text("exit"),),
-                                  ],  ),  ] ,
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp())),
+                                      },
+                                      child: Text("exit"),
+                                    ),
+                                  ],
+                                ),
+                              ],
                               elevation: 24.0,
                               backgroundColor: Colors.blueGrey[200],
                             );
                             showDialog(
                                 context: context,
-                                builder: (BuildContext context) => show );
-                          }}},
+                                builder: (BuildContext context) => show);
+                          }
+                        }
+                      },
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme.of(context).primaryColor,
-                      textColor: Colors.white ,
-                      shape :RoundedRectangleBorder(
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text("Submit" ,
-                        style: TextStyle(fontSize: 15, fontWeight :FontWeight.bold),)),
-                  SizedBox (height: 20,),
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      )),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton.icon(
                     label: Text('Exit'),
                     icon: Icon(Icons.exit_to_app),
-                    style : ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.greenAccent),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.greenAccent),
                     ),
                     onPressed: () {
-                      showAlertDialog(context);},
+                      showAlertDialog(context);
+                    },
                   ),
                   SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment : MainAxisAlignment.center ,
-                    children : [
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text("Already have an account ?"),
                       SizedBox(width: 20),
-                      TextButton(onPressed: () {Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=> LogIn()));
-                      },
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => LogIn()));
+                        },
                         child: Text("Login"),
-                      ),], ),],),),),),),);
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
+
 // --------------------- Coach location with permission  -----------------------
 Future<Position> _determinePosition() async {
-  return await Geolocator.getCurrentPosition();}
+  return await Geolocator.getCurrentPosition();
+}
+
 // ----------------------------- Send Data to database --------------------------------------
-Future<http.Response> createCoach(List<String> data) async{
-  return http.post(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/Coach.json'),
-    headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8',},
-    body: jsonEncode(<String, String>
-    {
-      "first name" : data[0],
-      "last name" : data[1],
-      "phone" : data[2],
-      "address" : data[3],
-      "email" : data[4],
-      "id_location" : data[5],
-      "id_patient" : " ",
+Future<http.Response> createCoach(List<String> data) async {
+  return http.post(
+    Uri.parse(
+        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/Coach.json'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "first name": data[0],
+      "last name": data[1],
+      "phone": data[2],
+      "address": data[3],
+      "email": data[4],
+      "id_location": data[5],
+      "id_patient": " ",
     }),
   );
 }

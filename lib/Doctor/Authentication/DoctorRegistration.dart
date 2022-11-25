@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Caregiver/Authentication/Login.dart';
+import 'package:rastreador/Doctor/Authentication/Login.dart';
 import '../../main.dart';
-import 'package:http/http.dart' as http ;
+import 'package:http/http.dart' as http;
+
 // -------------------- Doctor Subscription page -------------------------
 class RegistrationDoctor extends StatelessWidget {
   final _pwdController = TextEditingController();
@@ -22,8 +23,8 @@ class RegistrationDoctor extends StatelessWidget {
           textStyle: const TextStyle(fontSize: 20)),
       child: Text("OK"),
       onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => MyApp()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyApp()));
       },
     );
     // set up the AlertDialog
@@ -57,9 +58,9 @@ class RegistrationDoctor extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  IconButton(icon: Icon(Icons.home, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  IconButton(
+                    icon:
+                        Icon(Icons.home, color: Theme.of(context).primaryColor),
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => MyApp()));
@@ -79,7 +80,8 @@ class RegistrationDoctor extends StatelessWidget {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0)),
                       prefixIcon: Icon(Icons.person),
-                    ),),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
@@ -96,7 +98,9 @@ class RegistrationDoctor extends StatelessWidget {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.person),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
@@ -110,10 +114,12 @@ class RegistrationDoctor extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Address',
                         hintText: 'Address',
-                        border: OutlineInputBorder(borderRadius: BorderRadius
-                            .circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.home_work_outlined),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
@@ -154,8 +160,9 @@ class RegistrationDoctor extends StatelessWidget {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.email),
-                      ),),),
-
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
@@ -172,11 +179,12 @@ class RegistrationDoctor extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Password',
-                        border: OutlineInputBorder(borderRadius: BorderRadius
-                            .circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.lock_outline),
                       ),
-                    ),),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
@@ -191,15 +199,16 @@ class RegistrationDoctor extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: 'Confirm Password',
                         hintText: 'Confirm Password',
-                        border: OutlineInputBorder(borderRadius: BorderRadius
-                            .circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.lock),
                       ),
-                    ),),
+                    ),
+                  ),
                   SizedBox(height: 20),
                   MaterialButton(
                       onPressed: () async {
-                        if(_fromKey.currentState!.validate()){
+                        if (_fromKey.currentState!.validate()) {
                           List<String> data = [];
                           String fname = _fname.text;
                           String lname = _lname.text;
@@ -213,64 +222,82 @@ class RegistrationDoctor extends StatelessWidget {
                           data.add(emails);
                           http.Response res = await createDoctor(data);
                           try {
-                            UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                email: emails, password: _pwdController.text);
+                            UserCredential userCredential = await FirebaseAuth
+                                .instance
+                                .createUserWithEmailAndPassword(
+                                    email: emails,
+                                    password: _pwdController.text);
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');
                             } else if (e.code == 'email-already-in-use') {
-                              print('The account already exists for that email.');
+                              print(
+                                  'The account already exists for that email.');
                             }
                           } catch (e) {
                             print(e);
                           }
-                          if(res.statusCode == 200) {
+                          if (res.statusCode == 200) {
                             AlertDialog show = AlertDialog(
                               title: Text("Congrats for joining us"),
-                              content: Text("Do you want to continue to your profile !"),
+                              content: Text(
+                                  "Do you want to continue to your profile !"),
                               actions: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextButton(
-                                      onPressed:()=> {Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> LogIn())),
-                                      }, child: Text("Ok"),
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => LogIn())),
+                                      },
+                                      child: Text("Ok"),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     TextButton(
-                                      onPressed:() => {Navigator.push(context,
-                                          MaterialPageRoute(builder: (context)=> MyApp())),},
-                                      child: Text("exit"),),
-                                  ],  ),  ] ,
+                                      onPressed: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => MyApp())),
+                                      },
+                                      child: Text("exit"),
+                                    ),
+                                  ],
+                                ),
+                              ],
                               elevation: 24.0,
                               backgroundColor: Colors.blueGrey[200],
                             );
                             showDialog(
                                 context: context,
-                                builder: (BuildContext context) => show );
-                          }}},
+                                builder: (BuildContext context) => show);
+                          }
+                        }
+                      },
                       height: 50,
                       minWidth: double.infinity,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text("Submit",
+                      child: Text(
+                        "Submit",
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
-                      )
-                  ),
+                      )),
                   SizedBox(height: 20),
                   ElevatedButton.icon(
                     label: Text('Exit'),
                     icon: Icon(Icons.exit_to_app),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors.greenAccent),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.greenAccent),
                     ),
                     onPressed: () {
                       showAlertDialog(context);
@@ -282,24 +309,32 @@ class RegistrationDoctor extends StatelessWidget {
                     children: [
                       Text("Already have an account ?"),
                       SizedBox(width: 20),
-                      TextButton(onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LogIn()));
-                      },
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => LogIn()));
+                        },
                         child: Text("Login"),
                       ),
-                    ],),
-                ],),),),),),);
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<http.Response> createDoctor(List<String> data) {
-    return http.post(Uri.parse(
-        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'),
+    return http.post(
+      Uri.parse(
+          'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>
-      {
+      body: jsonEncode(<String, String>{
         "first name": data[0],
         "last name": data[1],
         "phone": data[2],

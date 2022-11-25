@@ -1,20 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rastreador/Coach/CoachRegistration.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
-import 'Register.dart';
+import '../Patient/Authentication/Register.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 //  --------------------------- Log in page ---------------------------------
 class Login extends StatefulWidget {
   @override
-  LoginPatient createState() => LoginPatient();
+  final String user;
+  Login({required this.user});
+  LoginUser createState() => LoginUser();
 }
 
-class LoginPatient extends State<Login> {
+class LoginUser extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -46,6 +48,7 @@ class LoginPatient extends State<Login> {
 
   // ignore: non_constant_identifier_names
   UserExist() async {
+    // ignore: unused_element
     build(BuildContext context) {
       return AlertDialog(
         title: const Text('Welcome !'),
@@ -73,7 +76,7 @@ class LoginPatient extends State<Login> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('LogIn')),
+      appBar: AppBar(title: Text('Login')),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -104,6 +107,12 @@ class LoginPatient extends State<Login> {
                   SizedBox(height: 30),
                   TextFormField(
                     controller: _emailController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Enter your Email';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(
                       labelText: 'E-mail',
                       hintText: 'E-mail',
@@ -113,23 +122,26 @@ class LoginPatient extends State<Login> {
                     ),
                   ),
                   SizedBox(height: 30),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Password cannot be empty !';
-                      } else if (value.length < 6) {
-                        return 'Password must be at least 6 characters long !';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Password',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      prefixIcon: Icon(Icons.vpn_key),
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Password cannot be empty !';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters long !';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Password',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        prefixIcon: Icon(Icons.vpn_key),
+                      ),
                     ),
                   ),
                   SizedBox(height: 30),
@@ -191,10 +203,12 @@ class LoginPatient extends State<Login> {
                       SizedBox(width: 5),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PatientRegister()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return widget.user == 'patient'
+                                ? PatientRegister()
+                                : RegistrationCoach();
+                          }));
                         },
                         child: Text("Register"),
                       ),

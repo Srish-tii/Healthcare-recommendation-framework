@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Patient/Information.dart';
 import 'package:location/location.dart';
-import 'UserDescription.dart';
-import 'UserAccount.dart';
+import 'CommonWidgets/UserDescription.dart';
+import 'CommonWidgets/UserAccount.dart';
 
 Future<void> main() async {
   /// *************** Ensure Firebase Initialization ***************

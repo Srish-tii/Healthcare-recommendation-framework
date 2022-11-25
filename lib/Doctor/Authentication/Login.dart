@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Coach/CoachRegistration.dart';
-import 'package:rastreador/Caregiver/CaregiverHome/CaregiverHome.dart';
+import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
 import '../../main.dart';
+
 /// ----------------------- getting Caregiver account data ----------------------
 /*List<Caregiver> parseCaregivers(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -35,21 +36,21 @@ class Caregiver {
   }
 }*/
 final FirebaseAuth _auth = FirebaseAuth.instance;
+
 /// -------------------- caregiver login page using rest API ----------
 class LogIn extends StatefulWidget {
   //final Future<List<Caregiver>> caregivers;
- // const LogIn(List<String> data, {Key? key, required this.caregivers}) : super(key: key );
+  // const LogIn(List<String> data, {Key? key, required this.caregivers}) : super(key: key );
   @override
   CaregiverLogin createState() => CaregiverLogin();
-
 }
 
-class  CaregiverLogin extends State<LogIn> {
-  final  _formKey = GlobalKey<FormState>();
+class CaregiverLogin extends State<LogIn> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _success = true;
-  String _userEmail= "";
+  String _userEmail = "";
   /*late Future<Caregiver> futureCaregiver;
   @override
   void initState() {
@@ -81,36 +82,44 @@ class  CaregiverLogin extends State<LogIn> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  IconButton(icon: Icon(Icons.home, color: Theme
-                      .of(context)
-                      .primaryColor), onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyApp()));
-                  },),
+                  IconButton(
+                    icon:
+                        Icon(Icons.home, color: Theme.of(context).primaryColor),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyApp()));
+                    },
+                  ),
                   SizedBox(height: 10),
-                  Text("Welcome ", style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),),
+                  Text(
+                    "Welcome ",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 10),
-                  Text("Sign in to continue",
-                    style: TextStyle(fontSize: 14, color: Colors.blueGrey),),
+                  Text(
+                    "Sign in to continue",
+                    style: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                  ),
                   SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child :TextFormField(
+                    child: TextFormField(
                       controller: _emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Enter your Email';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'E-mail',
                         hintText: 'E-mail',
-                        border : OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.email),
-                      ),),),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 30),
                   TextFormField(
                     controller: _passwordController,
@@ -132,16 +141,17 @@ class  CaregiverLogin extends State<LogIn> {
                     ),
                   ),
                   SizedBox(height: 30),
-/// ******************************** Test Caregiver data  ***********************************
+
+                  /// ******************************** Test Caregiver data  ***********************************
                   MaterialButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          final User? user = (await
-                          _auth.createUserWithEmailAndPassword(
+                          final User? user =
+                              (await _auth.createUserWithEmailAndPassword(
                             email: _emailController.text,
                             password: _passwordController.text,
-                          )
-                          ).user;
+                          ))
+                                  .user;
                           if (user != null) {
                             setState(() {
                               _success = true;
@@ -153,18 +163,23 @@ class  CaregiverLogin extends State<LogIn> {
                             });
                           }
                         }
-                        Navigator.push(context,
+                        Navigator.push(
+                            context,
                             MaterialPageRoute(
                                 builder: (context) => Caregiverprofile()));
                       },
                       height: 50,
                       minWidth: double.infinity,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                      child: Text("login", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        "login",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )),
                   SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -173,17 +188,21 @@ class  CaregiverLogin extends State<LogIn> {
                       SizedBox(width: 5),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationCoach()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegistrationCoach()));
                         },
                         child: Text("Register"),
                       ),
-                    ],),
-                ],),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),),
+          ),
+        ),
       ),
     );
   }
 }
-
-
