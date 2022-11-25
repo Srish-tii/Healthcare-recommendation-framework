@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:rastreador/Doctor/Authentication/Login.dart';
+import '../CommonWidgets/Login.dart';
 import '../main.dart';
 import 'package:http/http.dart' as http;
 
@@ -239,7 +239,8 @@ class RegistrationCoach extends StatelessWidget {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => LogIn())),
+                                                builder: (context) =>
+                                                    Login(user: 'coach'))),
                                       },
                                       child: Text("Ok"),
                                     ),
@@ -301,8 +302,10 @@ class RegistrationCoach extends StatelessWidget {
                       SizedBox(width: 20),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => LogIn()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Login(user: 'coach')));
                         },
                         child: Text("Login"),
                       ),

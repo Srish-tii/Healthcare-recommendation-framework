@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Doctor/Authentication/Login.dart';
+import '../../CommonWidgets/Login.dart';
 import '../../main.dart';
 import 'package:http/http.dart' as http;
 
@@ -251,7 +251,8 @@ class RegistrationDoctor extends StatelessWidget {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => LogIn())),
+                                                builder: (context) =>
+                                                    Login(user: 'doctor'))),
                                       },
                                       child: Text("Ok"),
                                     ),
@@ -311,8 +312,10 @@ class RegistrationDoctor extends StatelessWidget {
                       SizedBox(width: 20),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => LogIn()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Login(user: 'doctor')));
                         },
                         child: Text("Login"),
                       ),

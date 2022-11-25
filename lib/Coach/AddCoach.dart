@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rastreador/Doctor/Authentication/Login.dart';
+import '../CommonWidgets/Login.dart';
 
 import '../main.dart';
 
@@ -211,8 +210,10 @@ class AddCoach extends StatelessWidget {
                       SizedBox(width: 20),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => LogIn()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Login(user: 'coach')));
                         },
                         child: Text("Login"),
                       ),
