@@ -13,12 +13,15 @@ import 'Patient/Authentication/Login.dart';
 import 'Patient/Authentication/Register.dart';
 import 'Patient/Information.dart';
 import 'package:location/location.dart';
+import 'UserDescription.dart';
+import 'UserAccount.dart';
 
-Future<void> main() async{
+Future<void> main() async {
   /// *************** Ensure Firebase Initialization ***************
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   /// **************** Enable  Users Location  ****************
   Location location = new Location();
   location.enableBackgroundMode(enable: true);
@@ -27,6 +30,7 @@ Future<void> main() async{
     home: MyApp(),
   ));
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -36,145 +40,178 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Home'),
-    );}}
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
   @override
-  _MyHomePageState createState() => _MyHomePageState();}
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Patient Tracker"),),
+      appBar: AppBar(
+        title: Text("Patient Tracker"),
+      ),
       body: Container(
         //constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           color: const Color(0xff7c94b6),
-          image: DecorationImage(image: AssetImage("assets/back3.jpg"), fit: BoxFit.cover),),
-        child :SingleChildScrollView(
+          image: DecorationImage(
+              image: AssetImage("assets/back3.jpg"), fit: BoxFit.cover),
+        ),
+        child: SingleChildScrollView(
           child: Padding(
-            padding:const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Form(
-
-              child : Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:<Widget>[
-                  Container (
-                    child: Row (
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children : <Widget>[
-                        Expanded(
-                          child :Text(
-                            'Get start with our application, schedule your daily '
-                                'activities time and consult your caregiver '
-                                'advices.',
-                            softWrap: true,
-                            style: TextStyle(fontStyle: FontStyle.italic),),),
-                        Expanded(child: Padding (
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-                          child :  Image(
-                              image: AssetImage('assets/trackingpt.png'),width:120,height:80),),),],),),
+                children: <Widget>[
+                  UserDescription(
+                    content:
+                        "Get start with our application, schedule your daily activities time and consult your caregiver advices.",
+                    imageString: 'assets/trackingpt.png',
+                  ),
                   SizedBox(height: 10),
-                  Container (
-                    child : Row(
-                      mainAxisAlignment : MainAxisAlignment.center ,
-                      children : [
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> AddPatient()));
-                        },
-                          child: Text("Create New Account",style: TextStyle(color:Colors.white)),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddPatient()));
+                          },
+                          child: Text("Create New Account",
+                              style: TextStyle(color: Colors.white)),
                         ),
-                        Text (' Or'),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> Login()));
-                        },
-                          child: Text("Login ",style: TextStyle(color:Colors.white)),),],),),
-                  SizedBox(height: 20),
-                  Container (
-                    child : Row (
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children : <Widget>[
-                        Expanded (
-                          child :Text(
-                            'Get start with our application to consult your ,'
-                                'patients health and give your prescription .',
-                            softWrap: true,
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
+                        Text(' Or'),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Login()));
+                          },
+                          child: Text("Login ",
+                              style: TextStyle(color: Colors.white)),
                         ),
-                        Expanded(child: Image(
-                            image: AssetImage('assets/caregiver.png'),width:150,height:80),
-                        ),],),),
+                      ],
+                    ),
+                  ),
+                  // UserAccount(NewUser: AddPatient, Login: Login),
                   SizedBox(height: 20),
-                  Container (
-                    child : Row(
-                      mainAxisAlignment : MainAxisAlignment.center ,
-                      children : [
-                        SizedBox(width: 10 ),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> RegistrationDoctor()));
-                        },
-                          child: Text("Create Doctor Account",style: TextStyle(color:Colors.white)),),
+                  UserDescription(
+                    content:
+                        'Get start with our application to consult your patients health and give your prescription .',
+                    imageString: 'assets/caregiver.png',
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 10),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RegistrationDoctor()));
+                          },
+                          child: Text("Create Doctor Account",
+                              style: TextStyle(color: Colors.white)),
+                        ),
                         Text("Or"),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> LogIn()));
-                        },
-                          child: Text("Login",style: TextStyle(color:Colors.white)),),
-                      ],),),
-                  SizedBox(height: 15),
-                  Container (
-                    child : Row (
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children : <Widget>[
-                        Expanded (
-                          child :Text(
-                            'Get start with our application, consult your ,'
-                                'patients activities progress and give recommendation.',
-                            softWrap: true,
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LogIn()));
+                          },
+                          child: Text("Login",
+                              style: TextStyle(color: Colors.white)),
                         ),
-                        Expanded(child: Image(
-                            image: AssetImage('assets/healthcare.png'),width:120,height:80),
-                        ),],),),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 15),
-                  Container (
-                    child : Row(
-                      mainAxisAlignment : MainAxisAlignment.center ,
-                      children : [
-                        SizedBox(width: 10 ),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> AddCoach()));
-                        },
-                          child: Text("Create Coach Account", style: TextStyle(color:Colors.white)),),
-                        Text ("Or"),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> CLogin()));
-                        },
-                          child: Text("Login",style: TextStyle(color:Colors.white)),),
-                      ],),),
+                  UserDescription(
+                    content:
+                        'Get start with our application, consult your patients activities progress and give recommendation.',
+                    imageString: 'assets/healthcare.png',
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 10),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddCoach()));
+                          },
+                          child: Text("Create Coach Account",
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                        Text("Or"),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CLogin()));
+                          },
+                          child: Text("Login",
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  ),
                   Row(
-                    mainAxisAlignment : MainAxisAlignment.center ,
-                    children : [
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text("To Know about us :"),
                       SizedBox(width: 20),
-                      TextButton(onPressed: () {Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=> MoreInfo()));
-                      },
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MoreInfo()));
+                        },
                         child: Text("More Information"),
-                      ),],),
-                  SizedBox(height: 50,),
-                ],),
-            ),),
-        ),),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: ()=> exit(0),
+        onPressed: () => exit(0),
         tooltip: 'Close app',
-        label : const Text('Exit'),
+        label: const Text('Exit'),
         icon: Icon(Icons.home),
         backgroundColor: Colors.lightGreen,
-      ),);
+      ),
+    );
   }
 }
-
