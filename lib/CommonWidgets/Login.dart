@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Coach/CoachRegistration.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
+import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
+import 'package:rastreador/Coach/CoachHome.dart';
 import '../../main.dart';
 import '../Patient/Authentication/Register.dart';
+import '../Doctor/Authentication/DoctorRegistration.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -150,6 +153,7 @@ class LoginUser extends State<Login> {
                         if (_formKey.currentState!.validate()) {
                           final User? user =
                               (await _auth.signInWithEmailAndPassword(
+                            // (await _auth.createUserWithEmailAndPassword(
                             email: _emailController.text,
                             password: _passwordController.text,
                           ))
@@ -164,10 +168,15 @@ class LoginUser extends State<Login> {
                               _success = false;
                             });
                           }
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PatientProfile()));
+
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return widget.user == 'patient'
+                                ? PatientProfile()
+                                : widget.user == 'coach'
+                                    ? Coachprofile()
+                                    : Caregiverprofile();
+                          }));
                         }
                       },
                       height: 50,
@@ -207,7 +216,9 @@ class LoginUser extends State<Login> {
                               MaterialPageRoute(builder: (context) {
                             return widget.user == 'patient'
                                 ? PatientRegister()
-                                : RegistrationCoach();
+                                : widget.user == 'coach'
+                                    ? RegistrationCoach()
+                                    : RegistrationDoctor();
                           }));
                         },
                         child: Text("Register"),

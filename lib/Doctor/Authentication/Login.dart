@@ -1,46 +1,13 @@
 import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Coach/CoachRegistration.dart';
 import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
 import '../../main.dart';
 
-/// ----------------------- getting Caregiver account data ----------------------
-/*List<Caregiver> parseCaregivers(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  return parsed.map<Caregiver>((json) =>Caregiver.fromJson(json)).toList();
-}
-Future<Caregiver> fetchCaregiver() async {
-  final response = await http.get(Uri.parse(('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json')));
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response, then parse the JSON.
-    return Caregiver.fromJson(jsonDecode(response.body));
-    //parseCaregivers(response.body);
-  } else {
-    throw Exception('Failed to load caregiver');
-  }
-}
-class Caregiver {
-  final String email;
-  final String password;
-  Caregiver({
-    required this.email,
-    required this.password,
-  });
-  factory Caregiver.fromJson(Map<String, dynamic> json) {
-    return Caregiver(
-      email: json['email'],
-      password: json['password'],
-    );
-  }
-}*/
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-/// -------------------- caregiver login page using rest API ----------
 class LogIn extends StatefulWidget {
-  //final Future<List<Caregiver>> caregivers;
-  // const LogIn(List<String> data, {Key? key, required this.caregivers}) : super(key: key );
   @override
   CaregiverLogin createState() => CaregiverLogin();
 }
@@ -51,24 +18,6 @@ class CaregiverLogin extends State<LogIn> {
   final TextEditingController _passwordController = TextEditingController();
   bool _success = true;
   String _userEmail = "";
-  /*late Future<Caregiver> futureCaregiver;
-  @override
-  void initState() {
-    super.initState();
-    futureCaregiver = fetchCaregiver() ;
-  }
-   Caregiver caregivers = await fetchCaregiver();
-                          FutureBuilder<Caregiver>(
-                              future : futureCaregiver,
-                              builder: (context, snapshot) {
-                               if (snapshot.connectionState == ConnectionState.done) {
-                              if (snapshot.data!.email.compareTo(email) == 0 && snapshot.data!.password.compareTo(password) == 0)
-                             { return Text ("Welcome !");}}
-                            else if (snapshot.hasError) {
-                            return Text ('${snapshot.error}');}
-                                return const CircularProgressIndicator();
-                              },);
-  */
 
   Widget build(BuildContext context) {
     return Scaffold(
