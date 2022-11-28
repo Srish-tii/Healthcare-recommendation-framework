@@ -12,7 +12,6 @@ Future<void> main() async {
   /// *************** Ensure Firebase Initialization ***************
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   /// **************** Enable  Users Location  ****************
   Location location = new Location();

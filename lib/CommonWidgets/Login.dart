@@ -7,7 +7,7 @@ import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
 import 'package:rastreador/Coach/CoachHome.dart';
 import '../../main.dart';
 import '../Patient/Authentication/Register.dart';
-import '../Doctor/Authentication/DoctorRegistration.dart';
+// import '../Doctor/Authentication/DoctorRegistration.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -217,8 +217,8 @@ class LoginUser extends State<Login> {
                             return widget.user == 'patient'
                                 ? PatientRegister()
                                 : widget.user == 'coach'
-                                    ? RegistrationCoach()
-                                    : RegistrationDoctor();
+                                    ? Registration(user: "coach")
+                                    : Registration(user: "doctor");
                           }));
                         },
                         child: Text("Register"),

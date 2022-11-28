@@ -1,8 +1,9 @@
 import '../Patient/Authentication/AddPatient.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Doctor/Authentication/DoctorRegistration.dart';
-import '../Coach/AddCoach.dart';
+// import 'package:rastreador/Doctor/Authentication/DoctorRegistration.dart';
+// import '../Coach/AddCoach.dart';
 import 'Login.dart';
+import 'package:rastreador/Coach/CoachRegistration.dart';
 
 class UserAccount extends StatelessWidget {
   final String user;
@@ -21,8 +22,8 @@ class UserAccount extends StatelessWidget {
                 return user == 'patient'
                     ? AddPatient()
                     : user == 'coach'
-                        ? AddCoach()
-                        : RegistrationDoctor();
+                        ? Registration(user: "coach")
+                        : Registration(user: "doctor");
               }));
             },
             child: Text(text, style: TextStyle(color: Colors.white)),

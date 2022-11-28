@@ -6,16 +6,16 @@ import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
 
 /// -----------------  loading patient data from database -------------------
 class Patient {
-  String Firstname;
-  String Lastname;
+  String firstName;
+  String lastName;
   Patient({
-    required this.Firstname,
-    required this.Lastname,
+    required this.firstName,
+    required this.lastName,
   });
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      Firstname: json['first name'],
-      Lastname: json['last name'],
+      firstName: json['first name'],
+      lastName: json['last name'],
     );
   }
 }
