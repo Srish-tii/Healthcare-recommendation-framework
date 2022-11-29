@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/Authentication/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
+// import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../main.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -302,6 +302,71 @@ class RegisterPatient extends State<AddPatient> {
                   ),
                   SizedBox(height: 10),
                   MaterialButton(
+
+                      // onPressed: () async {
+                      //     if (_fromKey.currentState!.validate()) {
+                      //       List<String> data = [];
+                      //       String firstname = _firstnameController.text;
+                      //       String lastname = _lastnameController.text;
+                      //       String age = _ageController.text;
+                      //       String phone = _phoneController.text;
+                      //       String address = _addressController.text;
+                      //       String email = _emailController.text;
+                      //       String pwd = _confpwdController.text;
+                      //       data.add(firstname);
+                      //       data.add(lastname);
+                      //       data.add(age);
+                      //       data.add(phone);
+                      //       data.add(address);
+                      //       data.add(_gander);
+                      //       data.add(email);
+                      //       data.add(pwd);
+                      //       http.Response res = await createPatient(data);
+                      //       if (res.statusCode == 200) {
+                      //         _register();
+                      //         _determinePosition();
+                      //         AlertDialog show = AlertDialog(
+                      //           title: Text("Congrats for joining us"),
+                      //           content: Text(
+                      //               "Do you want to continue to your profile !"),
+                      //           actions: [
+                      //             Row(
+                      //               crossAxisAlignment: CrossAxisAlignment.start,
+                      //               children: [
+                      //                 TextButton(
+                      //                   onPressed: () => {
+                      //                     Navigator.push(
+                      //                         context,
+                      //                         MaterialPageRoute(
+                      //                             builder: (context) => Login())),
+                      //                   },
+                      //                   child: Text("Ok"),
+                      //                 ),
+                      //                 SizedBox(
+                      //                   width: 10,
+                      //                 ),
+                      //                 TextButton(
+                      //                   onPressed: () => {
+                      //                     Navigator.push(
+                      //                         context,
+                      //                         MaterialPageRoute(
+                      //                             builder: (context) => MyApp())),
+                      //                   },
+                      //                   child: Text("Cancel"),
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //           ],
+                      //           elevation: 24.0,
+                      //           backgroundColor: Colors.blueGrey[200],
+                      //         );
+                      //         showDialog(
+                      //             context: context,
+                      //             builder: (BuildContext context) => show);
+                      //       }
+                      //     }
+                      //   },
+
                       onPressed: () async {
                         if (_fromKey.currentState!.validate()) {
                           patient
@@ -370,4 +435,34 @@ class RegisterPatient extends State<AddPatient> {
     );
   }
 }
+
 /// *******************************************************************
+
+// Future<Position> _determinePosition() async {
+//   return await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.high);
+//   // return await Geolocator.getCurrentPosition();
+// }
+/// --------------------- Sending Data To database -------------------
+// Future<http.Response> createPatient(List<String> data) {
+//   return http.post(
+//     Uri.parse(
+//         'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//     body: jsonEncode(<String, String>{
+//       "first name": data[0],
+//       "last name": data[1],
+//       "age": data[2],
+//       "phone": data[3],
+//       "address": data[4],
+//       "email": data[5],
+//       "password": data[6],
+//       "gender": data[7],
+//       "id_disease": " ",
+//       "id_location": " ",
+//       "id_patient": " ",
+//     }),
+//   );
+// }

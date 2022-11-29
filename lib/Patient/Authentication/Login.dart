@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
-import 'Register.dart';
+import 'AddPatient.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -194,7 +192,7 @@ class LoginPatient extends State<Login> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PatientRegister()));
+                                  builder: (context) => AddPatient()));
                         },
                         child: Text("Register"),
                       ),

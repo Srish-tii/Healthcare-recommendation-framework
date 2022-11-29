@@ -1,9 +1,7 @@
 import '../Patient/Authentication/AddPatient.dart';
 import 'package:flutter/material.dart';
-// import 'package:rastreador/Doctor/Authentication/DoctorRegistration.dart';
-// import '../Coach/AddCoach.dart';
 import 'Login.dart';
-import 'package:rastreador/Coach/CoachRegistration.dart';
+import 'package:rastreador/CommonWidgets/Registration.dart';
 
 class UserAccount extends StatelessWidget {
   final String user;

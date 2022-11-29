@@ -1,53 +1,28 @@
-/// ************************** Old version of the patient registration page with realtime database *************************
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Patient/Authentication/Login.dart';
-import '../../main.dart';
-import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+import 'Login.dart';
+import '../main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
-/// ---------------------- Subscription Page ----------------------------
-class PatientRegister extends StatefulWidget {
-  @override
-  RegisterPatient createState() {
-    return RegisterPatient();
-  }
-}
-
-class RegisterPatient extends State<PatientRegister> {
+// ---------------------------- Coach Subscription Page -------------------------------
+class Registration extends StatelessWidget {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
   final _confpwdController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _firstnameController = TextEditingController();
-  final _lastnameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _ageController = TextEditingController();
-  final _addressController = TextEditingController();
-  String _gander = "";
-  bool _success = false;
+  final _fname = TextEditingController();
+  final _lname = TextEditingController();
+  final _email = TextEditingController();
+  final _address = TextEditingController();
+  final _phone = TextEditingController();
 
-  /// register email and password patient
-  void _register() async {
-    final User? user = (await _auth.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _pwdController.text,
-    ))
-        .user;
-    if (user != null) {
-      setState(() {
-        _success = true;
-      });
-    }
-  }
+  @override
+  final String user;
+  Registration({required this.user});
 
   showAlertDialog(BuildContext context) {
-    /// set up the button
     Widget okButton = TextButton(
       style: TextButton.styleFrom(
           padding: const EdgeInsets.all(16.0),
@@ -62,20 +37,25 @@ class RegisterPatient extends State<PatientRegister> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Exit"),
-      content: Text("Do you want to exit !"),
+      content: Text("Do you want to exit?"),
       actions: [
         okButton,
       ],
       elevation: 24.0,
       backgroundColor: Colors.blueGrey[200],
-    ); // show the dialog
+    );
     showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
+  CollectionReference coache = FirebaseFirestore.instance.collection('Coach');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Patient Subscription Page')),
+      appBar: AppBar(
+        // title: Text("Create Coach Account"),
+        title: Text("Create New Account"),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -83,7 +63,8 @@ class RegisterPatient extends State<PatientRegister> {
             child: Form(
               key: _fromKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   IconButton(
                     icon:
@@ -97,16 +78,16 @@ class RegisterPatient extends State<PatientRegister> {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      controller: _firstnameController,
+                      controller: _fname,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Patient first name cannot be empty';
+                          return 'Your first name cannot be empty';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
-                        labelText: 'FirstName',
-                        hintText: 'Patient first name',
+                        labelText: 'First Name',
+                        hintText: 'Put your first name',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.person),
@@ -116,137 +97,80 @@ class RegisterPatient extends State<PatientRegister> {
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      controller: _lastnameController,
+                      controller: _lname,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'User last name cannot be empty';
+                          return 'Your last name cannot be empty';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
-                        labelText: 'LastName',
-                        hintText: 'Patient Last name',
+                        labelText: 'Last Name',
+                        hintText: 'Put your last name',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.person),
                       ),
                     ),
                   ),
+                  user == "doctor"
+                      ? Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: TextFormField(
+                            controller: _address,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Doctor Address cannot be empty';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Address',
+                              hintText: 'Address',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              prefixIcon: Icon(Icons.home_work_outlined),
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink(),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      controller: _addressController,
+                      controller: _phone,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'User Address cannot be empty';
+                          return 'Phone cannot be empty !';
                         }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Address',
-                        hintText: 'Address',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.home_work_outlined),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      controller: _phoneController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'User phone number cannot be empty';
-                        } else if (value.length < 8) {
-                          return 'Phone number must contains 8 Numbers !';
+                        if (value.length < 8) {
+                          return 'Phone cannot be less than 8 numbers !';
                         } else if (value.length > 8) {
-                          return 'Phone number must contains only 8 Numbers !';
+                          return 'Phone cannot be upper than 8 numbers !';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
-                        labelText: 'Phone ',
-                        hintText: '+216  ',
+                        labelText: 'Phone',
+                        hintText: 'Enter your phone number',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.phone_android),
-                      ),
-                    ),
-                  ),
-                  // n// new Divider(height: 5.0, color: Colors.bl//------------- Select gender of user (radio) ---------------
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      controller: _ageController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Age cannot be empty';
-                        } else if (value.length < 2) {
-                          return 'Age must contains only 2 Numbers !';
-                        } else if (value.length > 2) {
-                          return 'Age must contains only 2 Numbers !';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Age ',
-                        hintText: 'Age  ',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.account_circle),
+                        prefixIcon: Icon(Icons.phone_android_sharp),
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child: Text(
-                      "Gender",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueGrey,
-                          fontSize: 15),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: ToggleSwitch(
-                      minWidth: 90.0,
-                      initialLabelIndex: 1,
-                      cornerRadius: 20.0,
-                      activeFgColor: Colors.white,
-                      inactiveBgColor: Colors.grey,
-                      inactiveFgColor: Colors.white,
-                      totalSwitches: 2,
-                      labels: ['Male', 'Female'],
-                      icons: [Icons.female, Icons.male],
-                      activeBgColors: [
-                        [Colors.blue],
-                        [Colors.pink]
-                      ],
-                      onToggle: (index) {
-                        if (index == 0) {
-                          _gander = "Female";
-                        } else {
-                          _gander = "Male";
-                        }
-                      },
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
                     child: TextFormField(
-                      controller: _emailController,
+                      controller: _email,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Enter your Email';
+                          return 'User E-mail cannot be empty';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'E-mail',
-                        hintText: 'E-mail',
+                        hintText: 'Put your E-mail name',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.email),
@@ -268,7 +192,7 @@ class RegisterPatient extends State<PatientRegister> {
                       },
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        hintText: 'Password',
+                        hintText: 'Enter your password',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.lock_outline),
@@ -282,7 +206,7 @@ class RegisterPatient extends State<PatientRegister> {
                       controller: _confpwdController,
                       validator: (value) {
                         if (value != _pwdController.value.text) {
-                          return 'password do not match !';
+                          return 'Passwords do not match !';
                         }
                         return null;
                       },
@@ -296,43 +220,86 @@ class RegisterPatient extends State<PatientRegister> {
                     ),
                   ),
                   SizedBox(height: 10),
+                  //!!!!!!!!!!!!!!!!!
+                  MaterialButton(
+                      onPressed: () async {
+                        if (_fromKey.currentState!.validate()) {
+                          coache
+                              .add({
+                                'first_name': _fname.text,
+                                'last_name': _lname.text,
+                                'phone': _phone.text
+                              })
+                              .then((value) => print("Coach Added"))
+                              .catchError((error) =>
+                                  print("Failed to add coach: $error"));
+                        }
+                      },
+                      height: 50,
+                      minWidth: double.infinity,
+                      color: Theme.of(context).primaryColor,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      )),
                   MaterialButton(
                       onPressed: () async {
                         if (_fromKey.currentState!.validate()) {
                           List<String> data = [];
-                          String firstname = _firstnameController.text;
-                          String lastname = _lastnameController.text;
-                          String age = _ageController.text;
-                          String phone = _phoneController.text;
-                          String address = _addressController.text;
-                          String email = _emailController.text;
-                          String pwd = _confpwdController.text;
-                          data.add(firstname);
-                          data.add(lastname);
-                          data.add(age);
+                          String fname = _fname.text;
+                          String lname = _lname.text;
+                          String address = _address.text;
+                          String phone = _phone.text;
+                          String emails = _email.text;
+                          String location = _determinePosition() as String;
+                          data.add(fname);
+                          data.add(lname);
                           data.add(phone);
                           data.add(address);
-                          data.add(_gander);
-                          data.add(email);
-                          data.add(pwd);
-                          http.Response res = await createPatient(data);
+                          data.add(emails);
+                          data.add(location);
+                          http.Response res = user == "doctor"
+                              ? await createDoctor(data)
+                              : await createCoach(data);
+                          try {
+                            UserCredential userCredential = await FirebaseAuth
+                                .instance
+                                .createUserWithEmailAndPassword(
+                                    email: emails,
+                                    password: _pwdController.text);
+                          } on FirebaseAuthException catch (e) {
+                            if (e.code == 'weak-password') {
+                              print('The password provided is too weak.');
+                            } else if (e.code == 'email-already-in-use') {
+                              print(
+                                  'The account already exists for that email.');
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
                           if (res.statusCode == 200) {
-                            _register();
-                            _determinePosition();
                             AlertDialog show = AlertDialog(
                               title: Text("Congrats for joining us"),
                               content: Text(
-                                  "Do you want to continue to your profile !"),
+                                  "Do you want to continue to your profile?"),
                               actions: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextButton(
                                       onPressed: () => {
-                                        Navigator.push(
-                                            context,
+                                        Navigator.push(context,
                                             MaterialPageRoute(
-                                                builder: (context) => Login())),
+                                                builder: (context) {
+                                          return user == 'doctor'
+                                              ? Login(user: 'doctor')
+                                              : Login(user: 'coach');
+                                        }))
                                       },
                                       child: Text("Ok"),
                                     ),
@@ -346,7 +313,7 @@ class RegisterPatient extends State<PatientRegister> {
                                             MaterialPageRoute(
                                                 builder: (context) => MyApp())),
                                       },
-                                      child: Text("Cancel"),
+                                      child: Text("exit"),
                                     ),
                                   ],
                                 ),
@@ -372,7 +339,9 @@ class RegisterPatient extends State<PatientRegister> {
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       )),
-                  SizedBox(height: 20),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton.icon(
                     label: Text('Exit'),
                     icon: Icon(Icons.exit_to_app),
@@ -393,7 +362,11 @@ class RegisterPatient extends State<PatientRegister> {
                       TextButton(
                         onPressed: () {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                              MaterialPageRoute(builder: (context) {
+                            return user == 'doctor'
+                                ? Login(user: 'doctor')
+                                : Login(user: 'coach');
+                          }));
                         },
                         child: Text("Login"),
                       ),
@@ -409,31 +382,44 @@ class RegisterPatient extends State<PatientRegister> {
   }
 }
 
-/// -------------------------- Patient location with permission -------------------------
+// --------------------- Coach location with permission  -----------------------
 Future<Position> _determinePosition() async {
-  return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
-  // return await Geolocator.getCurrentPosition();
+  return await Geolocator.getCurrentPosition();
 }
 
-/// --------------------- Sending Data To database -------------------
-Future<http.Response> createPatient(List<String> data) {
+// ----------------------------- Send Data to database --------------------------------------
+Future<http.Response> createCoach(List<String> data) async {
   return http.post(
     Uri.parse(
-        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/Coach.json'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(<String, String>{
       "first name": data[0],
       "last name": data[1],
-      "age": data[2],
-      "phone": data[3],
-      "address": data[4],
-      "email": data[5],
-      "password": data[6],
-      "gender": data[7],
-      "id_disease": " ",
+      "phone": data[2],
+      "address": data[3],
+      "email": data[4],
+      "id_location": data[5],
+      "id_patient": " ",
+    }),
+  );
+}
+
+Future<http.Response> createDoctor(List<String> data) {
+  return http.post(
+    Uri.parse(
+        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/caregiver.json'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "first name": data[0],
+      "last name": data[1],
+      "phone": data[2],
+      "address": data[3],
+      "email": data[4],
       "id_location": " ",
       "id_patient": " ",
     }),

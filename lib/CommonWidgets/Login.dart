@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Coach/CoachRegistration.dart';
+import 'package:rastreador/CommonWidgets/Registration.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
 import 'package:rastreador/Coach/CoachHome.dart';
 import '../../main.dart';
-import '../Patient/Authentication/Register.dart';
+import '../Patient/Authentication/AddPatient.dart';
 // import '../Doctor/Authentication/DoctorRegistration.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -215,7 +215,7 @@ class LoginUser extends State<Login> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return widget.user == 'patient'
-                                ? PatientRegister()
+                                ? AddPatient()
                                 : widget.user == 'coach'
                                     ? Registration(user: "coach")
                                     : Registration(user: "doctor");

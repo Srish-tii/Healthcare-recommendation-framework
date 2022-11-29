@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:rastreador/Patient/Authentication/Register.dart';
 import 'package:rastreador/Patient/Feedback/TestAlert.dart';
 import 'package:rastreador/Patient/Feedback/Feedback.dart';
 import 'package:rastreador/Patient/PatientHome/PatientInformation.dart';

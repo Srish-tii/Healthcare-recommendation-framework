@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rastreador/Patient/Authentication/Login.dart';
-import 'Register.dart';
+import 'AddPatient.dart';
 
 class Authentication extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _AuthenticatonState extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
     if (isToggle) {
-      return PatientRegister();
+      return AddPatient();
     } else {
       return Login();
     }
