@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:rastreador/Patient/Authentication/Login.dart';
+import '../../CommonWidgets/Login.dart';
 import 'AddPatient.dart';
 
 class Authentication extends StatefulWidget {
@@ -20,7 +20,7 @@ class _AuthenticatonState extends State<Authentication> {
     if (isToggle) {
       return AddPatient();
     } else {
-      return Login();
+      return Login(user: "patient");
     }
   }
 }

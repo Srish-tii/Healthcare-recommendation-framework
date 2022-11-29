@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:rastreador/CommonWidgets/Registration.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
-import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
+import 'package:rastreador/Doctor/DoctorHome/CaregiverHome.dart';
 import 'package:rastreador/Coach/CoachHome.dart';
 import '../../main.dart';
 import '../Patient/Authentication/AddPatient.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Patient/Authentication/Login.dart';
+import '../../CommonWidgets/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -419,8 +419,11 @@ class RegisterPatient extends State<AddPatient> {
                       SizedBox(width: 20),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Login(user: 'patient')));
                         },
                         child: Text("Login"),
                       ),

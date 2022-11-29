@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 // ---------------------------- Coach Subscription Page -------------------------------
+// ignore: must_be_immutable
 class Registration extends StatelessWidget {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();
@@ -221,32 +222,32 @@ class Registration extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   //!!!!!!!!!!!!!!!!!
-                  MaterialButton(
-                      onPressed: () async {
-                        if (_fromKey.currentState!.validate()) {
-                          coache
-                              .add({
-                                'first_name': _fname.text,
-                                'last_name': _lname.text,
-                                'phone': _phone.text
-                              })
-                              .then((value) => print("Coach Added"))
-                              .catchError((error) =>
-                                  print("Failed to add coach: $error"));
-                        }
-                      },
-                      height: 50,
-                      minWidth: double.infinity,
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      )),
+                  // MaterialButton(
+                  //     onPressed: () async {
+                  //       if (_fromKey.currentState!.validate()) {
+                  //         coache
+                  //             .add({
+                  //               'first_name': _fname.text,
+                  //               'last_name': _lname.text,
+                  //               'phone': _phone.text
+                  //             })
+                  //             .then((value) => print("Coach Added"))
+                  //             .catchError((error) =>
+                  //                 print("Failed to add coach: $error"));
+                  //       }
+                  //     },
+                  //     height: 50,
+                  //     minWidth: double.infinity,
+                  //     color: Theme.of(context).primaryColor,
+                  //     textColor: Colors.white,
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //     ),
+                  //     child: Text(
+                  //       "Submit",
+                  //       style: TextStyle(
+                  //           fontSize: 15, fontWeight: FontWeight.bold),
+                  //     )),
                   MaterialButton(
                       onPressed: () async {
                         if (_fromKey.currentState!.validate()) {

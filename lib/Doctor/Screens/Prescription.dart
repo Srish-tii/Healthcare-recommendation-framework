@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:rastreador/Doctor/CaregiverHome/CaregiverHome.dart';
+import 'package:rastreador/Doctor/DoctorHome/CaregiverHome.dart';
 
 /// -----------------  loading patient data from database -------------------
 class Patient {

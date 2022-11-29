@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rastreador/Doctor/CaregiverHome/PatientList.dart';
+import 'package:rastreador/Doctor/DoctorHome/PatientList.dart';
 import 'package:rastreador/Patient/PatientHome/Recommendation.dart';
 import 'package:rastreador/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
