@@ -20,6 +20,7 @@ class Registration extends StatelessWidget {
   final _phone = TextEditingController();
 
   @override
+  // ignore: override_on_non_overriding_member
   final String user;
   Registration({required this.user});
 
@@ -273,6 +274,7 @@ class Registration extends StatelessWidget {
                                 .createUserWithEmailAndPassword(
                                     email: emails,
                                     password: _pwdController.text);
+                            print("created");
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');
