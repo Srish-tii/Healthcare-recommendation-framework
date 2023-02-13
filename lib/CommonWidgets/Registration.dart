@@ -6,9 +6,8 @@ import 'Login.dart';
 import '../main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:toggle_switch/toggle_switch.dart';
 
-// ---------------------------- Coach Subscription Page -------------------------------
-// ignore: must_be_immutable
 class Registration extends StatelessWidget {
   final _fromKey = GlobalKey<FormState>();
   final _pwdController = TextEditingController();

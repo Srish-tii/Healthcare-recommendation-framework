@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>755546143751-5q9pr1rj36m31o7vipatoclifmjj4tgo.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.755546143751-5q9pr1rj36m31o7vipatoclifmjj4tgo</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC5vEzKUlNe06QOPelY-tedDzqrJFiKe_A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>755546143751</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.rastreador</string>
+	<key>PROJECT_ID</key>
+	<string>rastreador-6719e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rastreador-6719e.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>"1:755546143751:android:ddc66a631f975540eb3ea2"</string>
+	<key>DATABASE_URL</key>
+	<string>https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/</string>
+</dict>
+</plist>
