@@ -35,8 +35,8 @@ class RegisterPatient extends State<AddPatient> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// register email and password patient
-  void _register(data) async {
-    dbRef.push().set(data);
+  void _register() async {
+    print("In register");
     final User? user = (await _auth.createUserWithEmailAndPassword(
       email: _email.text,
       password: _pwdController.text,
@@ -335,9 +335,10 @@ class RegisterPatient extends State<AddPatient> {
                           data.add(pwd);
                           // dbRef.push().set(data);
                           http.Response res = await createPatient(data);
-                          if (res.statusCode == 200) {
-                            _register(data);
-                            _determinePosition();
+                          print(res.statusCode);
+                          if (res.statusCode == 201) {
+                            print("Inside");
+                            _register();
                             AlertDialog show = AlertDialog(
                               title: Text("Congrats for joining us"),
                               content: Text(
@@ -453,10 +454,12 @@ class RegisterPatient extends State<AddPatient> {
     );
   }
 
-  createPatient(List<String> data) {}
+  createPatient(List<String> data) {
+    dbRef.push().set(data);
+  }
 }
 
-void _determinePosition() {}
+
 
 /// *******************************************************************
 

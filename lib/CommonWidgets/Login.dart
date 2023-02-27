@@ -5,11 +5,13 @@ import 'package:rastreador/CommonWidgets/Registration.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import 'package:rastreador/Doctor/DoctorHome/CaregiverHome.dart';
 import 'package:rastreador/Coach/CoachHome.dart';
+import 'package:firebase_database/firebase_database.dart';
 import '../../main.dart';
 import '../Patient/Authentication/AddPatient.dart';
 // import '../Doctor/Authentication/DoctorRegistration.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+FirebaseDatabase database = FirebaseDatabase.instance;
 
 //  --------------------------- Log in page ---------------------------------
 class Login extends StatefulWidget {
@@ -151,6 +153,19 @@ class LoginUser extends State<Login> {
                   MaterialButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          // try {
+                          //   UserCredential userCredential = await FirebaseAuth
+                          //       .instance
+                          //       .signInWithEmailAndPassword(
+                          //           email: _emailController.text,
+                          //           password: _passwordController.text);
+                          // } on FirebaseAuthException catch (e) {
+                          //   if (e.code == 'user-not-found') {
+                          //     print('No user found for that email.');
+                          //   } else if (e.code == 'wrong-password') {
+                          //     print('Wrong password provided for that user.');
+                          //   }
+                          // }
                           final User? user =
                               (await _auth.signInWithEmailAndPassword(
                             // (await _auth.createUserWithEmailAndPassword(
