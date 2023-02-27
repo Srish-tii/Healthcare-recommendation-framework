@@ -3,13 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../../CommonWidgets/Login.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../main.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:http/http.dart' as http;
 
-//DatabaseReference ref = FirebaseDatabase.instance.ref();
-//FirebaseDatabase.instance.reference().child("Location 1");
+// DatabaseReference ref = FirebaseDatabase.instance.ref();
+DatabaseReference dbRef = FirebaseDatabase.instance.ref().child("patients");
+
 class AddPatient extends StatefulWidget {
   @override
   RegisterPatient createState() {
@@ -33,7 +35,8 @@ class RegisterPatient extends State<AddPatient> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// register email and password patient
-  void _register() async {
+  void _register(data) async {
+    dbRef.push().set(data);
     final User? user = (await _auth.createUserWithEmailAndPassword(
       email: _email.text,
       password: _pwdController.text,
@@ -316,7 +319,6 @@ class RegisterPatient extends State<AddPatient> {
                           String age = _age.text;
                           //String phone = _phoneController.text;
                           String phone = _phone.text;
-
                           //String address = _addressController.text;
                           String address = _address.text;
                           //String email = _emailController.text;
@@ -331,10 +333,10 @@ class RegisterPatient extends State<AddPatient> {
                           data.add(_gander);
                           data.add(email);
                           data.add(pwd);
-                          print(data);
+                          // dbRef.push().set(data);
                           http.Response res = await createPatient(data);
                           if (res.statusCode == 200) {
-                            _register();
+                            _register(data);
                             _determinePosition();
                             AlertDialog show = AlertDialog(
                               title: Text("Congrats for joining us"),
