@@ -336,50 +336,51 @@ class RegisterPatient extends State<AddPatient> {
                           // dbRef.push().set(data);
                           http.Response res = await createPatient(data);
                           print(res.statusCode);
-                          if (res.statusCode == 201) {
-                            print("Inside");
-                            _register();
-                            AlertDialog show = AlertDialog(
-                              title: Text("Congrats for joining us"),
-                              content: Text(
-                                  "Do you want to continue to your profile !"),
-                              actions: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Login(
-                                                      user: '',
-                                                    ))),
-                                      },
-                                      child: Text("Ok"),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    TextButton(
-                                      onPressed: () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => MyApp())),
-                                      },
-                                      child: Text("Cancel"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                              elevation: 24.0,
-                              backgroundColor: Colors.blueGrey[200],
-                            );
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) => show);
-                          }
+                          print("kshdbcj");
+                          // if (res.statusCode == 201) {
+                          print("Inside");
+                          _register();
+                          AlertDialog show = AlertDialog(
+                            title: Text("Congrats for joining us"),
+                            content: Text(
+                                "Do you want to continue to your profile !"),
+                            actions: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Login(
+                                                    user: '',
+                                                  ))),
+                                    },
+                                    child: Text("Ok"),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  TextButton(
+                                    onPressed: () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MyApp())),
+                                    },
+                                    child: Text("Cancel"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            elevation: 24.0,
+                            backgroundColor: Colors.blueGrey[200],
+                          );
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => show);
+                          // }
                         }
                       },
 
@@ -455,39 +456,57 @@ class RegisterPatient extends State<AddPatient> {
   }
 
   createPatient(List<String> data) {
-    dbRef.push().set(data);
+    return dbRef.push().set(data);
   }
+  // Future<http.Response> createPatient(List<String> data) {
+  //   return http.post(
+  //     Uri.parse(
+  //         'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       "first name": data[0],
+  //       "last name": data[1],
+  //       "age": data[2],
+  //       "phone": data[3],
+  //       "address": data[4],
+  //       "email": data[5],
+  //       "password": data[6],
+  //       "gender": data[7],
+  //       "id_disease": " ",
+  //       "id_location": " ",
+  //       "id_patient": " ",
+  //     }),
+  //   );
+  // }
 }
-
-
-
-/// *******************************************************************
 
 // Future<Position> _determinePosition() async {
 //   return await Geolocator.getCurrentPosition(
 //       desiredAccuracy: LocationAccuracy.high);
 //   // return await Geolocator.getCurrentPosition();
 // }
-/// --------------------- Sending Data To database -------------------
-// Future<http.Response> createPatient(List<String> data) {
-//   return http.post(
-//     Uri.parse(
-//         'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{
-//       "first name": data[0],
-//       "last name": data[1],
-//       "age": data[2],
-//       "phone": data[3],
-//       "address": data[4],
-//       "email": data[5],
-//       "password": data[6],
-//       "gender": data[7],
-//       "id_disease": " ",
-//       "id_location": " ",
-//       "id_patient": " ",
-//     }),
-//   );
-// }
+// / --------------------- Sending Data To database -------------------
+Future<http.Response> createPatient(List<String> data) {
+  return http.post(
+    Uri.parse(
+        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "first name": data[0],
+      "last name": data[1],
+      "age": data[2],
+      "phone": data[3],
+      "address": data[4],
+      "email": data[5],
+      "password": data[6],
+      "gender": data[7],
+      "id_disease": " ",
+      "id_location": " ",
+      "id_patient": " ",
+    }),
+  );
+}
