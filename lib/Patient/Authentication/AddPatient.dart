@@ -336,7 +336,6 @@ class RegisterPatient extends State<AddPatient> {
                           // dbRef.push().set(data);
                           http.Response res = await createPatient(data);
                           print(res.statusCode);
-                          print("kshdbcj");
                           // if (res.statusCode == 201) {
                           print("Inside");
                           _register();
@@ -488,25 +487,65 @@ class RegisterPatient extends State<AddPatient> {
 //   // return await Geolocator.getCurrentPosition();
 // }
 // / --------------------- Sending Data To database -------------------
-Future<http.Response> createPatient(List<String> data) {
-  return http.post(
-    Uri.parse(
-        'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      "first name": data[0],
-      "last name": data[1],
-      "age": data[2],
-      "phone": data[3],
-      "address": data[4],
-      "email": data[5],
-      "password": data[6],
-      "gender": data[7],
-      "id_disease": " ",
-      "id_location": " ",
-      "id_patient": " ",
-    }),
-  );
+
+// Future<http.Response> createPatient(List<String> data) {
+//   return http.post(
+//     Uri.parse(
+//         'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//     },
+//     body: jsonEncode(<String, String>{
+//       "first name": data[0],
+//       "last name": data[1],
+//       "age": data[2],
+//       "phone": data[3],
+//       "address": data[4],
+//       "email": data[5],
+//       "password": data[6],
+//       "gender": data[7],
+//       "id_disease": " ",
+//       "id_location": " ",
+//       "id_patient": " ",
+//     }),
+//   );
+// }
+
+Future<http.Response> createPatient(List<String> data) async {
+  try {
+    final response = await http.post(
+      Uri.parse(
+          'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "first name": data[0],
+        "last name": data[1],
+        "age": data[2],
+        "phone": data[3],
+        "address": data[4],
+        "email": data[5],
+        "password": data[6],
+        "gender": data[7],
+        "id_disease": " ",
+        "id_location": " ",
+        "id_patient": " ",
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      // Request successful
+      print("Patient created successfully");
+      return response;
+    } else {
+      // Request failed
+      print("Error creating patient: ${response.statusCode}");
+      return response;
+    }
+  } catch (error) {
+    // Exception occurred
+    print("Error creating patient: $error");
+    throw error;
+  }
 }

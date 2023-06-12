@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 Future<List<Patient>> fetchPatients(http.Client client) async {
   final response = await client.get(Uri.parse(
-      'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json'));
+      'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/patient.json'));
   // Use the compute function to run parsePateints in a separate isolate.
   return compute(parsePatients, response.body);
 }

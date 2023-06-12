@@ -27,7 +27,7 @@ List<Patient> parsePatient(String responseBody) {
 
 Future<List<Patient>> fetchPatient() async {
   final response = await http.get(Uri.parse(
-      ('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/patient.json')));
+      ('https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/patient.json')));
   if (response.statusCode == 200) {
     return parsePatient(response.body);
   } else {

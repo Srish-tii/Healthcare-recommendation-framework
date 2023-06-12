@@ -3,14 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
-import 'package:http/http.dart' as http ;
+import 'package:http/http.dart' as http;
 
 ///--------------------------- Add new Activity page ------------------------------
-class WriteActivity extends StatefulWidget{
+class WriteActivity extends StatefulWidget {
   @override
   _AddActivity createState() => _AddActivity();
 }
-class _AddActivity extends State<WriteActivity>{
+
+class _AddActivity extends State<WriteActivity> {
   //final database = FirebaseDatabase.instance.reference() ;
   final _actname = TextEditingController();
   final _actype = TextEditingController();
@@ -23,8 +24,10 @@ class _AddActivity extends State<WriteActivity>{
           primary: Colors.white,
           textStyle: const TextStyle(fontSize: 20)),
       child: Text("OK"),
-      onPressed: (){ Navigator.push(context,
-          MaterialPageRoute(builder: (context)=> MyApp()));},
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyApp()));
+      },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -36,139 +39,177 @@ class _AddActivity extends State<WriteActivity>{
       elevation: 24.0,
       backgroundColor: Colors.blueGrey[200],
     );
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => alert );
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar (title: Text('Add Activities')),
-      body:Container(
+      appBar: AppBar(title: Text('Add Activities')),
+      body: Container(
         child: SingleChildScrollView(
-          child :Padding (
+          child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
-              child : Column (
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  IconButton( icon:Icon(Icons.home , color:Theme.of(context).primaryColor),
-                    onPressed: (){Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=> MyApp())); },
+                  IconButton(
+                    icon:
+                        Icon(Icons.home, color: Theme.of(context).primaryColor),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyApp()));
+                    },
                   ),
-                  SizedBox(height : 10),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child : TextFormField(
+                    child: TextFormField(
                       controller: _actname,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Give activity name';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Activity name',
                         hintText: 'Activity name',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.accessibility_new),
-                      ),),),
-                  SizedBox(height : 10),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child : TextFormField(
+                    child: TextFormField(
                       controller: _actype,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Add the activity category';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Activity category',
                         hintText: 'Activity category',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.category_outlined),
-                      ),),),
-                  SizedBox(height : 10),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(3.0),
-                    child : TextFormField(
+                    child: TextFormField(
                       controller: _actlocation,
-                      validator: (value){
-                        if (value!.isEmpty){
+                      validator: (value) {
+                        if (value!.isEmpty) {
                           return 'Add the activity Location';
                         }
-                        return null ;
+                        return null;
                       },
                       decoration: InputDecoration(
                         labelText: 'Activity location',
                         hintText: 'Location of the activity',
-                        border : OutlineInputBorder(
+                        border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                         prefixIcon: Icon(Icons.location_on),
-                      ),),),
-                  SizedBox(height : 50),
-                  MaterialButton(onPressed: () async{
-                    List<String> data = [];
-                    String actname = _actname.text ;
-                    String actCat = _actype.text ;
-                    String actlocation = _actlocation.text ;
-                    data.add(actname);
-                    data.add(actCat);
-                    data.add(actlocation);
-                    http.Response res = await createCoach(data) ;
-                    if(res.statusCode == 200) {
-                      AlertDialog show = AlertDialog(
-                        title: Text("Activity created successfully "),
-                        content: Text("Save and continue !"),
-                        actions: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextButton(
-                                onPressed:()=> {Navigator.push(context, MaterialPageRoute(builder: (context)=> PatientProfile())),
-                                }, child: Text("Ok"),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  MaterialButton(
+                      onPressed: () async {
+                        List<String> data = [];
+                        String actname = _actname.text;
+                        String actCat = _actype.text;
+                        String actlocation = _actlocation.text;
+                        data.add(actname);
+                        data.add(actCat);
+                        data.add(actlocation);
+                        http.Response res = await createCoach(data);
+                        if (res.statusCode == 200) {
+                          AlertDialog show = AlertDialog(
+                            title: Text("Activity created successfully "),
+                            content: Text("Save and continue !"),
+                            actions: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PatientProfile())),
+                                    },
+                                    child: Text("Ok"),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  TextButton(
+                                    onPressed: () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PatientProfile())),
+                                    },
+                                    child: Text("exit"),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 10,),
-                              TextButton(
-                                onPressed:() => {Navigator.push(context,
-                                    MaterialPageRoute(builder: (context)=> PatientProfile())),},
-                                child: Text("exit"),),
-                            ],  ),  ] ,
-                        elevation: 24.0,
-                        backgroundColor: Colors.blueGrey[200],
-                      );
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => show );
-                    }},
+                            ],
+                            elevation: 24.0,
+                            backgroundColor: Colors.blueGrey[200],
+                          );
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => show);
+                        }
+                      },
                       height: 50,
                       minWidth: double.infinity,
                       color: Theme.of(context).primaryColor,
-                      textColor: Colors.white ,
-                      shape :RoundedRectangleBorder(
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Text("Save" ,
-                        style: TextStyle(fontSize: 15, fontWeight :FontWeight.bold),)),
-                ],),),),),),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      )),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
 
 ///  ------------------------- Save data ---------------------------
-Future<http.Response> createCoach(List<String> data) async{
-  return http.post(Uri.parse('https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/activity.json'),
-    headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8',},
-    body: jsonEncode(<String, String>
-    {
-      "name" : data[0],
-      "id_category" : data[1],
-      "location" : data[2],
-      "id_patient" : " ",
+Future<http.Response> createCoach(List<String> data) async {
+  return http.post(
+    Uri.parse(
+        'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/activity.json'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      "name": data[0],
+      "id_category": data[1],
+      "location": data[2],
+      "id_patient": " ",
     }),
   );
 }

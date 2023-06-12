@@ -11,7 +11,7 @@ List<Activity> parseActivities(String responseBody) {
 
 Future<List<Activity>> fetchActivities(Type client) async {
   final response = await http.get(Uri.parse(
-      'https://patient-tracking-34e27-default-rtdb.europe-west1.firebasedatabase.app/activity.json'));
+      'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/activity.json'));
   return compute(parseActivities, response.body);
 }
 
