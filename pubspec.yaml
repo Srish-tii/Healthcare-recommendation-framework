@@ -33,6 +33,7 @@ dependencies:
   location_permissions: ^4.0.1
   table_calendar: ^3.0.2
   syncfusion_flutter_calendar: ^20.4.44
+  permission_handler: ^10.3.0
 # --------------- firebase dependencies --------------------
   # firebase_core: ^1.7.0
   # cloud_firestore: ^3.1.6
@@ -44,6 +45,7 @@ dependencies:
   firebase_database: ^10.0.10
   firebase_auth: ^4.2.6
   firebase_dynamic_links: ^5.0.12
+  geocoding: ^2.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

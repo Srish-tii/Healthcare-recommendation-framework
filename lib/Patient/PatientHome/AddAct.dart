@@ -1,312 +1,293 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:math';
 
-///--------------------------- Add new Activity page ------------------------------
-class WriteActivity extends StatefulWidget {
-  @override
-  _AddActivity createState() => _AddActivity();
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+class LocationData {
+  final String id;
+  final String image;
+  final String link;
+  final String address;
+  final Map<String, String> coords;
+  final String promoted;
+  final String mapIcon;
+
+  LocationData({
+    required this.id,
+    required this.image,
+    required this.link,
+    required this.address,
+    required this.coords,
+    required this.promoted,
+    required this.mapIcon,
+  });
+
+  factory LocationData.fromJson(Map<String, dynamic> json) {
+    return LocationData(
+      id: json['id'],
+      image: json['image'],
+      link: json['link'],
+      address: json['address'],
+      coords: Map<String, String>.from(json['coords']),
+      promoted: json['promoted'],
+      mapIcon: json['map_icon'],
+    );
+  }
 }
 
-class _AddActivity extends State<WriteActivity> {
-  //final database = FirebaseDatabase.instance.reference() ;
-  final _actname = TextEditingController();
-  final _actype = TextEditingController();
-  final _actlocation = TextEditingController();
-  showAlertDialog(BuildContext context) {
-    // set up the button
-    Widget okButton = TextButton(
-      style: TextButton.styleFrom(
-          padding: const EdgeInsets.all(16.0),
-          primary: Colors.white,
-          textStyle: const TextStyle(fontSize: 20)),
-      child: Text("OK"),
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyApp()));
-      },
+class WriteActivity extends StatefulWidget {
+  @override
+  _AddActivityState createState() => _AddActivityState();
+}
+
+class _AddActivityState extends State<WriteActivity> {
+  String _currentLocation = 'Fetching location...';
+  List<LocationData> _locations = [];
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+    _loadLocations();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
     );
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Exit"),
-      content: Text("Do you want to exit !"),
-      actions: [
-        okButton,
-      ],
-      elevation: 24.0,
-      backgroundColor: Colors.blueGrey[200],
-    );
-    showDialog(context: context, builder: (BuildContext context) => alert);
+
+    setState(() {
+      _currentLocation =
+          'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
+    });
+  }
+
+  Future<void> _loadLocations() async {
+    String jsonContent = await DefaultAssetBundle.of(context)
+        .loadString('lib\Patient\PatientHome\sscvl.json');
+    List<dynamic> jsonList = json.decode(jsonContent);
+
+    List<LocationData> locations =
+        jsonList.map((json) => LocationData.fromJson(json)).toList();
+    setState(() {
+      _locations = locations;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add Activities')),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon:
-                        Icon(Icons.home, color: Theme.of(context).primaryColor),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MyApp()));
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      controller: _actname,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Give activity name';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Activity name',
-                        hintText: 'Activity name',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.accessibility_new),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      controller: _actype,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Add the activity category';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Activity category',
-                        hintText: 'Activity category',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.category_outlined),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: TextFormField(
-                      controller: _actlocation,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Add the activity Location';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Activity location',
-                        hintText: 'Location of the activity',
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.location_on),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  MaterialButton(
-                      onPressed: () async {
-                        List<String> data = [];
-                        String actname = _actname.text;
-                        String actCat = _actype.text;
-                        String actlocation = _actlocation.text;
-                        data.add(actname);
-                        data.add(actCat);
-                        data.add(actlocation);
-                        http.Response res = await createCoach(data);
-                        if (res.statusCode == 200) {
-                          AlertDialog show = AlertDialog(
-                            title: Text("Activity created successfully "),
-                            content: Text("Save and continue !"),
-                            actions: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PatientProfile())),
-                                    },
-                                    child: Text("Ok"),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  TextButton(
-                                    onPressed: () => {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PatientProfile())),
-                                    },
-                                    child: Text("exit"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                            elevation: 24.0,
-                            backgroundColor: Colors.blueGrey[200],
-                          );
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => show);
-                        }
-                      },
-                      height: 50,
-                      minWidth: double.infinity,
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        "Save",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      )),
-                ],
-              ),
+      appBar: AppBar(
+        title: Text('Add New Activity'),
+      ),
+      body: Column(
+        children: [
+          Center(
+            child: Text(
+              _currentLocation,
+              style: TextStyle(fontSize: 20),
             ),
           ),
-        ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: min(10, _locations.length),
+              itemBuilder: (context, index) {
+                LocationData location = _locations[index];
+                return ListTile(
+                  title: Text(location.address),
+                  subtitle: Text(
+                      'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}'),
+                  // Add any other UI elements you want to display for each location
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-///  ------------------------- Save data ---------------------------
-Future<http.Response> createCoach(List<String> data) async {
-  return http.post(
-    Uri.parse(
-        'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/activity.json'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      "name": data[0],
-      "id_category": data[1],
-      "location": data[2],
-      "id_patient": " ",
-    }),
-  );
-}
-/*
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import '../../main.dart';
-class WriteActivity extends StatefulWidget{
-  @override
-  SelectActivity createState() => SelectActivity();
-}
-class SelectActivity extends State<WriteActivity>{
-  //final database = FirebaseDatabase.instance.reference() ;
-  final _actname = TextEditingController();
-  final _actype = TextEditingController();
-  final _actlocation = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    // final activitiyRef = database.child('/activity');
-    return Scaffold(
-      appBar: AppBar (title: Text('Activities')),
-      body:SafeArea(
-        child: SingleChildScrollView(
-          child :Padding (
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              child : Column (
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  ElevatedButton(onPressed: (){
-                    */
-/* activitiyRef.set({'id_acivity' : '0001',
-                      'name' : 'walking' ,
-                        'location' : 'Walking street'
-                      });*//*
 
-                  }, child: Text('set activity')),
-                  IconButton( icon:Icon(Icons.home , color:Theme.of(context).primaryColor),
-                    onPressed: (){Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=> MyApp())); },
-                  ),
-                  SizedBox(height : 10),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child : TextFormField(
-                      controller: _actname,
-                      validator: (value){
-                        if (value!.isEmpty){
-                          return 'Give activity name';
-                        }
-                        return null ;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Activity name',
-                        hintText: 'Activity name',
-                        border : OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.accessibility_new),
-                      ),),),
-                  SizedBox(height : 10),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child : TextFormField(
-                      controller: _actype,
-                      validator: (value){
-                        if (value!.isEmpty){
-                          return 'Add the activity category';
-                        }
-                        return null ;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Activity category',
-                        hintText: 'Activity category',
-                        border : OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.accessibility_new),
-                      ),),),
-                  SizedBox(height : 10),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child : TextFormField(
-                      controller: _actlocation,
-                      validator: (value){
-                        if (value!.isEmpty){
-                          return 'Give activity name';
-                        }
-                        return null ;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Activity practicing place',
-                        hintText: 'Activity location',
-                        border : OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        prefixIcon: Icon(Icons.location_on_outlined),
-                      ),),),
-                ],),),),),),
-    );
-  }
-}
-*/
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// class WriteActivity extends StatefulWidget {
+//   @override
+//   _AddActivityState createState() => _AddActivityState();
+// }
+
+// class _AddActivityState extends State<WriteActivity> {
+//   List<Map<dynamic, dynamic>> _activities = [];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchActivities();
+//   }
+
+//   Future<void> _fetchActivities() async {
+//     DatabaseReference activitiesRef =
+//         FirebaseDatabase.instance.reference().child('ssclv');
+//     DatabaseEvent event = await activitiesRef.once();
+
+//     DataSnapshot dataSnapshot = event.snapshot;
+
+//     Map<dynamic, dynamic> activitiesData =
+//         dataSnapshot.value as Map<dynamic, dynamic>;
+//     List<Map<dynamic, dynamic>> activitiesList = [];
+
+//     activitiesData.forEach((key, value) {
+//       activitiesList.add(value);
+//     });
+
+//     // Sort activities by distance
+//     Position currentPosition = await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.high,
+//     );
+
+//     activitiesList.sort((a, b) {
+//       double aDistance = _calculateDistance(
+//         currentPosition.latitude,
+//         currentPosition.longitude,
+//         a['coords']['lat'],
+//         a['coords']['lng'],
+//       );
+//       double bDistance = _calculateDistance(
+//         currentPosition.latitude,
+//         currentPosition.longitude,
+//         b['coords']['lat'],
+//         b['coords']['lng'],
+//       );
+//       return aDistance.compareTo(bDistance);
+//     });
+
+//     setState(() {
+//       _activities =
+//           activitiesList.sublist(0, 5); // Get top 5 closest activities
+//     });
+//   }
+
+//   double _calculateDistance(double startLatitude, double startLongitude,
+//       double endLatitude, double endLongitude) {
+//     return Geolocator.distanceBetween(
+//       startLatitude,
+//       startLongitude,
+//       endLatitude,
+//       endLongitude,
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Add New Activity'),
+//       ),
+//       body: ListView.builder(
+//         itemCount: _activities.length,
+//         itemBuilder: (context, index) {
+//           Map<dynamic, dynamic> activity = _activities[index];
+//           String id = activity['id'].toString();
+//           double latitude = activity['coords']['lat'];
+//           double longitude = activity['coords']['lng'];
+
+//           return ListTile(
+//             title: Text('ID: $id'),
+//             subtitle: Text('Latitude: $latitude, Longitude: $longitude'),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+// ///--------------------------- Add new Activity page ------------------------------
+// class WriteActivity extends StatefulWidget {
+//   @override
+//   _AddActivity createState() => _AddActivity();
+// }
+
+// class _AddActivity extends State<WriteActivity> {
+//   final _actname = TextEditingController();
+//   final _actype = TextEditingController();
+//   final _actlocation = TextEditingController();
+//   showAlertDialog(BuildContext context) {
+//     // set up the button
+//     Widget okButton = TextButton(
+//       style: TextButton.styleFrom(
+//           padding: const EdgeInsets.all(16.0),
+//           primary: Colors.white,
+//           textStyle: const TextStyle(fontSize: 20)),
+//       child: Text("OK"),
+//       onPressed: () {
+//         Navigator.push(
+//             context, MaterialPageRoute(builder: (context) => MyApp()));
+//       },
+//     );
+//     // set up the AlertDialog
+//     AlertDialog alert = AlertDialog(
+//       title: Text("Exit"),
+//       content: Text("Do you want to exit !"),
+//       actions: [
+//         okButton,
+//       ],
+//       elevation: 24.0,
+//       backgroundColor: Colors.blueGrey[200],
+//     );
+//     showDialog(context: context, builder: (BuildContext context) => alert);
+//   }
+
+//   Position? _currentPosition;
+//   //final database = FirebaseDatabase.instance.reference() ;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("Location"),
+//       ),
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             if (_currentPosition != null)
+//               Text(
+//                   "LAT: ${_currentPosition!.latitude}, LNG: ${_currentPosition!.longitude}"),
+//             TextButton(
+//               child: Text("Get location"),
+//               onPressed: () {
+//                 _getCurrentLocation();
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+  // _getCurrentLocation() {
+  //   Geolocator.getCurrentPosition(
+  //           desiredAccuracy: LocationAccuracy.best,
+  //           forceAndroidLocationManager: true)
+  //       .then((Position position) {
+  //     setState(() {
+  //       _currentPosition = position;
+  //     });
+  //   }).catchError((e) {
+  //     print(e);
+  //   });
+  // }

@@ -8,6 +8,7 @@ import 'Patient/Information.dart';
 import 'package:location/location.dart';
 import 'CommonWidgets/UserDescription.dart';
 import 'CommonWidgets/UserAccount.dart';
+import 'package:geolocator/geolocator.dart';
 
 Future<void> main() async {
   /// *************** Ensure Firebase Initialization ***************
