@@ -58,6 +58,8 @@ class WriteActivity extends StatefulWidget {
 class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching location...';
   List<LocationData> _locations = [];
+  List<LocationData> _closestLocations = [];
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +75,7 @@ class _AddActivityState extends State<WriteActivity> {
     setState(() {
       _currentLocation =
           'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
+      _calculateClosestLocations(position);
     });
   }
 
@@ -87,6 +90,44 @@ class _AddActivityState extends State<WriteActivity> {
       _locations = locations;
     });
     print(locations.length);
+  }
+
+  void _calculateClosestLocations(Position currentLocation) {
+    List<LocationData> locations = List.from(_locations);
+
+    locations.sort((a, b) {
+      double distanceA = _calculateDistance(
+        currentLocation.latitude,
+        currentLocation.longitude,
+        double.parse(a.coords['lat']!),
+        double.parse(a.coords['lng']!),
+      );
+      double distanceB = _calculateDistance(
+        currentLocation.latitude,
+        currentLocation.longitude,
+        double.parse(b.coords['lat']!),
+        double.parse(b.coords['lng']!),
+      );
+      return distanceA.compareTo(distanceB);
+    });
+
+    setState(() {
+      _closestLocations = locations.take(10).toList();
+    });
+  }
+
+  double _calculateDistance(
+    double startLatitude,
+    double startLongitude,
+    double endLatitude,
+    double endLongitude,
+  ) {
+    return Geolocator.distanceBetween(
+      startLatitude,
+      startLongitude,
+      endLatitude,
+      endLongitude,
+    );
   }
 
   @override
@@ -105,9 +146,9 @@ class _AddActivityState extends State<WriteActivity> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: min(20, _locations.length),
+              itemCount: min(10, _closestLocations.length),
               itemBuilder: (context, index) {
-                LocationData location = _locations[index];
+                LocationData location = _closestLocations[index];
                 return ListTile(
                   title: Text(location.address),
                   subtitle: Text(
@@ -122,7 +163,6 @@ class _AddActivityState extends State<WriteActivity> {
     );
   }
 }
-
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // class WriteActivity extends StatefulWidget {
