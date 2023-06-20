@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
@@ -76,15 +77,16 @@ class _AddActivityState extends State<WriteActivity> {
   }
 
   Future<void> _loadLocations() async {
-    String jsonContent = await DefaultAssetBundle.of(context)
-        .loadString('lib\Patient\PatientHome\sscvl.json');
-    List<dynamic> jsonList = json.decode(jsonContent);
+    final String response = await rootBundle.loadString('assets/sscvl.json');
+    final data = await json.decode(response);
 
-    List<LocationData> locations =
-        jsonList.map((json) => LocationData.fromJson(json)).toList();
+    List<LocationData> locations = (data as List<dynamic>)
+        .map((json) => LocationData.fromJson(json))
+        .toList();
     setState(() {
       _locations = locations;
     });
+    print(locations.length);
   }
 
   @override
@@ -103,7 +105,7 @@ class _AddActivityState extends State<WriteActivity> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: min(10, _locations.length),
+              itemCount: min(20, _locations.length),
               itemBuilder: (context, index) {
                 LocationData location = _locations[index];
                 return ListTile(
