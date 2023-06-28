@@ -6,12 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
+import "package:latlong2/latlong.dart" as latLng;
+
 import '../../main.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +59,8 @@ class WriteActivity extends StatefulWidget {
 }
 
 class _AddActivityState extends State<WriteActivity> {
-  String _currentLocation = 'Fetching location...';
+  String _currentLocation = 'Fetching your current location...';
+  int _numberOfLocationsToShow = 5;
   List<LocationData> _locations = [];
   List<LocationData> _closestLocations = [];
 
@@ -112,7 +116,7 @@ class _AddActivityState extends State<WriteActivity> {
     });
 
     setState(() {
-      _closestLocations = locations.take(10).toList();
+      _closestLocations = locations.take(5).toList();
     });
   }
 
@@ -130,6 +134,12 @@ class _AddActivityState extends State<WriteActivity> {
     );
   }
 
+  void _updateNumberOfLocationsToShow(int numberOfLocations) {
+    setState(() {
+      _numberOfLocationsToShow = numberOfLocations;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,16 +147,65 @@ class _AddActivityState extends State<WriteActivity> {
         title: Text('Add New Activity'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
+          SizedBox(
+              height: 300,
+              child: FlutterMap(
+                options: MapOptions(
+                  center: latLng.LatLng(
+                      37.42,
+                      // double.parse(double.parse(_currentLocation
+                      //         .split(',')[0]
+                      //         .replaceAll(RegExp(r'(^\d*\.?\d*)'), ''))
+                      //     .toStringAsFixed(2)),
+                      -122.04),
+                  zoom: 13.0,
+                ),
+                children: [
+                  TileLayer(
+                      urlTemplate:
+                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      subdomains: ['a', 'b', 'c']),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        width: 80.0,
+                        height: 80.0,
+                        point: latLng.LatLng(37.42, -112.04),
+                        builder: (ctx) => Container(
+                          child: FlutterLogo(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
               _currentLocation,
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Number of Locations',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                int numberOfLocations = int.tryParse(value) ?? 0;
+                _updateNumberOfLocationsToShow(numberOfLocations);
+              },
             ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: min(10, _closestLocations.length),
+              itemCount:
+                  min(_numberOfLocationsToShow, _closestLocations.length),
               itemBuilder: (context, index) {
                 LocationData location = _closestLocations[index];
                 return ListTile(
@@ -163,173 +222,3 @@ class _AddActivityState extends State<WriteActivity> {
     );
   }
 }
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// class WriteActivity extends StatefulWidget {
-//   @override
-//   _AddActivityState createState() => _AddActivityState();
-// }
-
-// class _AddActivityState extends State<WriteActivity> {
-//   List<Map<dynamic, dynamic>> _activities = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchActivities();
-//   }
-
-//   Future<void> _fetchActivities() async {
-//     DatabaseReference activitiesRef =
-//         FirebaseDatabase.instance.reference().child('ssclv');
-//     DatabaseEvent event = await activitiesRef.once();
-
-//     DataSnapshot dataSnapshot = event.snapshot;
-
-//     Map<dynamic, dynamic> activitiesData =
-//         dataSnapshot.value as Map<dynamic, dynamic>;
-//     List<Map<dynamic, dynamic>> activitiesList = [];
-
-//     activitiesData.forEach((key, value) {
-//       activitiesList.add(value);
-//     });
-
-//     // Sort activities by distance
-//     Position currentPosition = await Geolocator.getCurrentPosition(
-//       desiredAccuracy: LocationAccuracy.high,
-//     );
-
-//     activitiesList.sort((a, b) {
-//       double aDistance = _calculateDistance(
-//         currentPosition.latitude,
-//         currentPosition.longitude,
-//         a['coords']['lat'],
-//         a['coords']['lng'],
-//       );
-//       double bDistance = _calculateDistance(
-//         currentPosition.latitude,
-//         currentPosition.longitude,
-//         b['coords']['lat'],
-//         b['coords']['lng'],
-//       );
-//       return aDistance.compareTo(bDistance);
-//     });
-
-//     setState(() {
-//       _activities =
-//           activitiesList.sublist(0, 5); // Get top 5 closest activities
-//     });
-//   }
-
-//   double _calculateDistance(double startLatitude, double startLongitude,
-//       double endLatitude, double endLongitude) {
-//     return Geolocator.distanceBetween(
-//       startLatitude,
-//       startLongitude,
-//       endLatitude,
-//       endLongitude,
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Add New Activity'),
-//       ),
-//       body: ListView.builder(
-//         itemCount: _activities.length,
-//         itemBuilder: (context, index) {
-//           Map<dynamic, dynamic> activity = _activities[index];
-//           String id = activity['id'].toString();
-//           double latitude = activity['coords']['lat'];
-//           double longitude = activity['coords']['lng'];
-
-//           return ListTile(
-//             title: Text('ID: $id'),
-//             subtitle: Text('Latitude: $latitude, Longitude: $longitude'),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-// ///--------------------------- Add new Activity page ------------------------------
-// class WriteActivity extends StatefulWidget {
-//   @override
-//   _AddActivity createState() => _AddActivity();
-// }
-
-// class _AddActivity extends State<WriteActivity> {
-//   final _actname = TextEditingController();
-//   final _actype = TextEditingController();
-//   final _actlocation = TextEditingController();
-//   showAlertDialog(BuildContext context) {
-//     // set up the button
-//     Widget okButton = TextButton(
-//       style: TextButton.styleFrom(
-//           padding: const EdgeInsets.all(16.0),
-//           primary: Colors.white,
-//           textStyle: const TextStyle(fontSize: 20)),
-//       child: Text("OK"),
-//       onPressed: () {
-//         Navigator.push(
-//             context, MaterialPageRoute(builder: (context) => MyApp()));
-//       },
-//     );
-//     // set up the AlertDialog
-//     AlertDialog alert = AlertDialog(
-//       title: Text("Exit"),
-//       content: Text("Do you want to exit !"),
-//       actions: [
-//         okButton,
-//       ],
-//       elevation: 24.0,
-//       backgroundColor: Colors.blueGrey[200],
-//     );
-//     showDialog(context: context, builder: (BuildContext context) => alert);
-//   }
-
-//   Position? _currentPosition;
-//   //final database = FirebaseDatabase.instance.reference() ;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Location"),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             if (_currentPosition != null)
-//               Text(
-//                   "LAT: ${_currentPosition!.latitude}, LNG: ${_currentPosition!.longitude}"),
-//             TextButton(
-//               child: Text("Get location"),
-//               onPressed: () {
-//                 _getCurrentLocation();
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-  // _getCurrentLocation() {
-  //   Geolocator.getCurrentPosition(
-  //           desiredAccuracy: LocationAccuracy.best,
-  //           forceAndroidLocationManager: true)
-  //       .then((Position position) {
-  //     setState(() {
-  //       _currentPosition = position;
-  //     });
-  //   }).catchError((e) {
-  //     print(e);
-  //   });
-  // }

@@ -46,6 +46,8 @@ dependencies:
   firebase_auth: ^4.2.6
   firebase_dynamic_links: ^5.0.12
   geocoding: ^2.1.0
+  flutter_map: ^4.0.0
+  latlong: ^0.6.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
