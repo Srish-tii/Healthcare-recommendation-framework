@@ -1,9 +1,25 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart' as latLng;
+import 'package:firebase_database/firebase_database.dart';
+import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
+import "package:latlong2/latlong.dart" as latLng;
+
+import '../../main.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class LocationData {
   final String id;
@@ -13,7 +29,6 @@ class LocationData {
   final Map<String, String> coords;
   final String promoted;
   final String mapIcon;
-  final String category;
 
   LocationData({
     required this.id,
@@ -23,7 +38,6 @@ class LocationData {
     required this.coords,
     required this.promoted,
     required this.mapIcon,
-    required this.category,
   });
 
   factory LocationData.fromJson(Map<String, dynamic> json) {
@@ -35,7 +49,6 @@ class LocationData {
       coords: Map<String, String>.from(json['coords']),
       promoted: json['promoted'],
       mapIcon: json['map_icon'],
-      category: json['category'],
     );
   }
 }
@@ -47,10 +60,9 @@ class WriteActivity extends StatefulWidget {
 
 class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching your current location...';
-  int _numberOfLocationsToShow = 250;
+  int _numberOfLocationsToShow = 50;
   List<LocationData> _locations = [];
   List<LocationData> _closestLocations = [];
-  String? _selectedCategory;
 
   @override
   void initState() {
@@ -80,7 +92,6 @@ class _AddActivityState extends State<WriteActivity> {
         .toList();
     setState(() {
       _locations = locations;
-      _closestLocations = locations.take(_numberOfLocationsToShow).toList();
     });
     print(locations.length);
   }
@@ -105,7 +116,7 @@ class _AddActivityState extends State<WriteActivity> {
     });
 
     setState(() {
-      _closestLocations = locations.take(250).toList();
+      _closestLocations = locations.take(50).toList();
     });
   }
 
@@ -123,26 +134,9 @@ class _AddActivityState extends State<WriteActivity> {
     );
   }
 
-  void _filterLocationsByCategory() {
-    if (_selectedCategory == null) {
-      setState(() {
-        _closestLocations = _locations.take(_numberOfLocationsToShow).toList();
-      });
-    } else {
-      List<LocationData> filteredLocations = _locations
-          .where((location) => location.category == _selectedCategory)
-          .toList();
-      setState(() {
-        _closestLocations =
-            filteredLocations.take(_numberOfLocationsToShow).toList();
-      });
-    }
-  }
-
   void _updateNumberOfLocationsToShow(int numberOfLocations) {
     setState(() {
       _numberOfLocationsToShow = numberOfLocations;
-      _closestLocations = _locations.take(_numberOfLocationsToShow).toList();
     });
   }
 
@@ -196,45 +190,6 @@ class _AddActivityState extends State<WriteActivity> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Text(
-                  'Select a category:',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: _selectedCategory,
-                    hint: Text('Select a category'),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCategory = value;
-                        _filterLocationsByCategory();
-                      });
-                    },
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: null,
-                        child: Text('All'),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'water',
-                        child: Text('Water'),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'ground',
-                        child: Text('Ground'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
                 labelText: 'Number of Locations',
@@ -249,14 +204,14 @@ class _AddActivityState extends State<WriteActivity> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: _closestLocations.length,
+              itemCount:
+                  min(_numberOfLocationsToShow, _closestLocations.length),
               itemBuilder: (context, index) {
                 LocationData location = _closestLocations[index];
                 return ListTile(
                   title: Text(location.address),
                   subtitle: Text(
-                    'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}',
-                  ),
+                      'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}'),
                   // Add any other UI elements you want to display for each location
                 );
               },
