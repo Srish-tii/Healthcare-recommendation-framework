@@ -60,7 +60,7 @@ class WriteActivity extends StatefulWidget {
 
 class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching your current location...';
-  int _numberOfLocationsToShow = 5;
+  int _numberOfLocationsToShow = 50;
   List<LocationData> _locations = [];
   List<LocationData> _closestLocations = [];
 
@@ -116,7 +116,7 @@ class _AddActivityState extends State<WriteActivity> {
     });
 
     setState(() {
-      _closestLocations = locations.take(5).toList();
+      _closestLocations = locations.take(50).toList();
     });
   }
 
