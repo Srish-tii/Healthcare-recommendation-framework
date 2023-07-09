@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as latLng;
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geocoding/geocoding.dart';
 
 class LocationData {
   final String id;
@@ -47,6 +48,8 @@ class WriteActivity extends StatefulWidget {
 
 class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching your current location...';
+  String? _currentAddress;
+  Position? _currentPosition;
   int _numberOfLocationsToShow = 250;
   List<LocationData> _locations = [];
   List<LocationData> _closestLocations = [];
@@ -68,6 +71,27 @@ class _AddActivityState extends State<WriteActivity> {
       _currentLocation =
           'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
       _calculateClosestLocations(position);
+    });
+
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => position = position);
+      _getAddressFromLatLng(position!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(position!.latitude, position!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+            '${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
     });
   }
 
@@ -160,12 +184,12 @@ class _AddActivityState extends State<WriteActivity> {
               child: FlutterMap(
                 options: MapOptions(
                   center: latLng.LatLng(
-                      37.42,
+                      47.3838,
                       // double.parse(double.parse(_currentLocation
                       //         .split(',')[0]
                       //         .replaceAll(RegExp(r'(^\d*\.?\d*)'), ''))
                       //     .toStringAsFixed(2)),
-                      -122.04),
+                      0.6739),
                   zoom: 13.0,
                 ),
                 children: [
@@ -176,9 +200,9 @@ class _AddActivityState extends State<WriteActivity> {
                   MarkerLayer(
                     markers: [
                       Marker(
-                        width: 80.0,
-                        height: 80.0,
-                        point: latLng.LatLng(37.42, -112.04),
+                        width: 60.0,
+                        height: 60.0,
+                        point: latLng.LatLng(47.3838, 0.6793),
                         builder: (ctx) => Container(
                           child: FlutterLogo(),
                         ),
@@ -191,6 +215,7 @@ class _AddActivityState extends State<WriteActivity> {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               _currentLocation,
+              //_currentAddress,
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -257,7 +282,6 @@ class _AddActivityState extends State<WriteActivity> {
                   subtitle: Text(
                     'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}',
                   ),
-                  // Add any other UI elements you want to display for each location
                 );
               },
             ),
