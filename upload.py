@@ -11,6 +11,7 @@ firebase_admin.initialize_app(cred, {
 
 # Path to your JSON file
 json_file_path = "sscvl.json"
+# json_file_path = "output.json"
 
 # Read JSON data from file
 with open(json_file_path) as file:

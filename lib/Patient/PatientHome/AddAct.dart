@@ -4,38 +4,31 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as latLng;
 import 'package:flutter_map/flutter_map.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationData {
   final String id;
-  final String image;
-  final String link;
+  // final String image;
+  // final String link;
   final String address;
   final Map<String, String> coords;
-  final String promoted;
-  final String mapIcon;
+  // final String promoted;
+  // final String mapIcon;
   final String category;
 
   LocationData({
     required this.id,
-    required this.image,
-    required this.link,
     required this.address,
     required this.coords,
-    required this.promoted,
-    required this.mapIcon,
     required this.category,
   });
 
   factory LocationData.fromJson(Map<String, dynamic> json) {
     return LocationData(
       id: json['id'],
-      image: json['image'],
-      link: json['link'],
       address: json['address'],
       coords: Map<String, String>.from(json['coords']),
-      promoted: json['promoted'],
-      mapIcon: json['map_icon'],
       category: json['category'],
     );
   }
@@ -48,7 +41,7 @@ class WriteActivity extends StatefulWidget {
 
 class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching your current location...';
-  String? _currentAddress;
+  String _currentAddress = "";
   Position? _currentPosition;
   int _numberOfLocationsToShow = 250;
   List<LocationData> _locations = [];
@@ -63,27 +56,37 @@ class _AddActivityState extends State<WriteActivity> {
   }
 
   Future<void> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+    var permissionStatus = await Permission.location.request();
+    if (permissionStatus.isGranted) {
+      // Permission granted, fetch the current location
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
 
-    setState(() {
-      _currentLocation =
-          'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
-      _calculateClosestLocations(position);
-    });
+      setState(() {
+        _currentLocation =
+            'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
+        _calculateClosestLocations(position);
+      });
 
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setState(() => position = position);
-      _getAddressFromLatLng(position!);
-    }).catchError((e) {
-      debugPrint(e);
-    });
+      await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high)
+          .then((Position position) {
+        setState(() => this._currentPosition = position);
+        _getAddressFromLatLng(position);
+      }).catchError((e) {
+        debugPrint(e);
+      });
+    } else {
+      // Permission denied, handle accordingly
+      setState(() {
+        _currentLocation = 'Permission denied';
+      });
+    }
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position!.latitude, position!.longitude)
+    await placemarkFromCoordinates(position.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       setState(() {
@@ -97,6 +100,7 @@ class _AddActivityState extends State<WriteActivity> {
 
   Future<void> _loadLocations() async {
     final String response = await rootBundle.loadString('assets/sscvl.json');
+    // final String response = await rootBundle.loadString('assets/output.json');
     final data = await json.decode(response);
 
     List<LocationData> locations = (data as List<dynamic>)
@@ -184,12 +188,7 @@ class _AddActivityState extends State<WriteActivity> {
               child: FlutterMap(
                 options: MapOptions(
                   center: latLng.LatLng(
-                      47.3838,
-                      // double.parse(double.parse(_currentLocation
-                      //         .split(',')[0]
-                      //         .replaceAll(RegExp(r'(^\d*\.?\d*)'), ''))
-                      //     .toStringAsFixed(2)),
-                      0.6739),
+                      _currentPosition!.latitude, _currentPosition!.longitude),
                   zoom: 13.0,
                 ),
                 children: [
@@ -202,7 +201,10 @@ class _AddActivityState extends State<WriteActivity> {
                       Marker(
                         width: 60.0,
                         height: 60.0,
-                        point: latLng.LatLng(47.3838, 0.6793),
+                        point: latLng.LatLng(
+                          _currentPosition!.latitude,
+                          _currentPosition!.longitude,
+                        ),
                         builder: (ctx) => Container(
                           child: FlutterLogo(),
                         ),
@@ -214,8 +216,8 @@ class _AddActivityState extends State<WriteActivity> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              _currentLocation,
-              //_currentAddress,
+              //_currentLocation,
+              _currentAddress,
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -282,6 +284,7 @@ class _AddActivityState extends State<WriteActivity> {
                   subtitle: Text(
                     'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}',
                   ),
+                  // Add any other UI elements you want to display for each location
                 );
               },
             ),
