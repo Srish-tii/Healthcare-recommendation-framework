@@ -62,7 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(45.0),
+            padding: const EdgeInsets.only(
+                top: 100.0, bottom: 60.0, right: 50, left: 50),
             child: Form(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

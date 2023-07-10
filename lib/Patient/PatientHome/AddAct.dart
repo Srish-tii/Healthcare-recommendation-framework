@@ -41,7 +41,7 @@ class WriteActivity extends StatefulWidget {
 
 class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching your current location...';
-  String _currentAddress = "";
+  String _currentAddress = "Fetching your current location...";
   Position? _currentPosition;
   int _numberOfLocationsToShow = 250;
   List<LocationData> _locations = [];
