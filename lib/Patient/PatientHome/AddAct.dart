@@ -11,6 +11,7 @@ class LocationData {
   final String id;
   // final String image;
   // final String link;
+  final String city;
   final String address;
   final Map<String, String> coords;
   // final String promoted;
@@ -21,6 +22,7 @@ class LocationData {
     required this.id,
     required this.address,
     required this.coords,
+    required this.city,
     required this.category,
   });
 
@@ -28,6 +30,7 @@ class LocationData {
     return LocationData(
       id: json['id'],
       address: json['address'],
+      city: json['city'],
       coords: Map<String, String>.from(json['coords']),
       category: json['category'],
     );

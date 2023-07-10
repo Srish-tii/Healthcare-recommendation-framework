@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/Feedback/Feedback.dart';
+import '../PatientHome/PatientHome.dart';
 
 class MyLayout extends StatelessWidget {
   @override
@@ -15,18 +16,30 @@ class MyLayout extends StatelessWidget {
     );
   }
 }
+
 // replace this function with the examples above
 showAlertDialog(BuildContext context) {
+  print('showAlertDialog called');
   // set up the buttons
   Widget startButton = TextButton(
     child: Text("Start"),
-    onPressed:  () {Navigator.push(context,
-        MaterialPageRoute(builder: (context)=> FeedbackPage()));
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FeedbackPage()),
+      );
+      Navigator.of(context, rootNavigator: true).pop();
     },
   );
   Widget cancelButton = TextButton(
     child: Text("Cancel"),
-    onPressed:  () {},
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PatientProfile()),
+      );
+      Navigator.of(context, rootNavigator: true).pop();
+    },
   );
 
   // set up the AlertDialog
@@ -45,4 +58,5 @@ showAlertDialog(BuildContext context) {
     builder: (BuildContext context) {
       return alert;
     },
-  ); }
+  );
+}

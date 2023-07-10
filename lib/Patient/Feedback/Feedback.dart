@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rastreador/Patient/Feedback/Quiz.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
@@ -53,7 +52,14 @@ class PatientFeedback extends State<FeedbackPage> {
                 "Save",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              onPressed: () => Navigator.pop(context, true),
+              //onPressed: () => Navigator.pop(context, true),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PatientProfile()),
+                );
+                Navigator.of(context, rootNavigator: true).pop();
+              },
               color: Color.fromRGBO(0, 179, 134, 1.0),
               radius: BorderRadius.circular(0.0),
             ),
