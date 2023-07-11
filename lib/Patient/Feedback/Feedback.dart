@@ -1,11 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:rastreador/Patient/Feedback/Quiz.dart';
 import 'package:rastreador/Patient/PatientHome/PatientHome.dart';
 import '../../main.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+DatabaseReference dbRef =
+    FirebaseDatabase.instance.ref().child("patient feedback");
 
 /// ***************** Intialization questions lists*********************
 QuizBrain quizBrain = QuizBrain();
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+CollectionReference patient =
+    FirebaseFirestore.instance.collection('PatientFeedback');
 
 class FeedbackPage extends StatefulWidget {
   @override
@@ -13,6 +24,48 @@ class FeedbackPage extends StatefulWidget {
 }
 
 ///  ------------------------ Feedback -------------------------
+
+// class ComposerFunction with HttpFunction<Input, Request>
+// {
+// Future<http.Response> createPatient(List<String> data) async {
+//   try {
+//     final response = await http.post(
+//       Uri.parse(
+//           'https://rastreador-6719e-default-rtdb.europe-west1.firebasedatabase.app/patient.json'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//       },
+//       body: jsonEncode(<String, String>{
+//         "first name": data[0],
+//         "last name": data[1],
+//         "age": data[2],
+//         "phone": data[3],
+//         "address": data[4],
+//         "email": data[5],
+//         "password": data[6],
+//         "gender": data[7],
+//         "id_disease": " ",
+//         "id_location": " ",
+//         "id_patient": " ",
+//       }),
+//     );
+
+//     if (response.statusCode == 201) {
+//       // Request successful
+//       print("Patient created successfully");
+//       return response;
+//     } else {
+//       // Request failed
+//       print("Error creating patient: ${response.statusCode}");
+//       return response;
+//     }
+//   } catch (error) {
+//     // Exception occurred
+//     print("Error creating patient: $error");
+//     throw error;
+//   }
+// }}
+
 class PatientFeedback extends State<FeedbackPage> {
   List<Icon> scoreKeeper = [];
   void checkAnswer(bool userPickedAnswer) {
@@ -52,7 +105,6 @@ class PatientFeedback extends State<FeedbackPage> {
                 "Save",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-              //onPressed: () => Navigator.pop(context, true),
               onPressed: () {
                 Navigator.push(
                   context,

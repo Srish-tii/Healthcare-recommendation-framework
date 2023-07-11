@@ -9,13 +9,9 @@ import 'package:geocoding/geocoding.dart';
 
 class LocationData {
   final String id;
-  // final String image;
-  // final String link;
   final String city;
   final String address;
   final Map<String, String> coords;
-  // final String promoted;
-  // final String mapIcon;
   final String category;
 
   LocationData({
@@ -46,10 +42,12 @@ class _AddActivityState extends State<WriteActivity> {
   String _currentLocation = 'Fetching your current location...';
   String _currentAddress = "Fetching your current location...";
   Position? _currentPosition;
+  String? _selectedCategory;
+  String? _selectedCity;
+
   int _numberOfLocationsToShow = 250;
   List<LocationData> _locations = [];
   List<LocationData> _closestLocations = [];
-  String? _selectedCategory;
 
   @override
   void initState() {
@@ -61,7 +59,6 @@ class _AddActivityState extends State<WriteActivity> {
   Future<void> _getCurrentLocation() async {
     var permissionStatus = await Permission.location.request();
     if (permissionStatus.isGranted) {
-      // Permission granted, fetch the current location
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -73,15 +70,14 @@ class _AddActivityState extends State<WriteActivity> {
       });
 
       await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high)
-          .then((Position position) {
+        desiredAccuracy: LocationAccuracy.high,
+      ).then((Position position) {
         setState(() => this._currentPosition = position);
         _getAddressFromLatLng(position);
       }).catchError((e) {
         debugPrint(e);
       });
     } else {
-      // Permission denied, handle accordingly
       setState(() {
         _currentLocation = 'Permission denied';
       });
@@ -102,8 +98,7 @@ class _AddActivityState extends State<WriteActivity> {
   }
 
   Future<void> _loadLocations() async {
-    final String response = await rootBundle.loadString('assets/sscvl.json');
-    // final String response = await rootBundle.loadString('assets/output.json');
+    final String response = await rootBundle.loadString('assets/output.json');
     final data = await json.decode(response);
 
     List<LocationData> locations = (data as List<dynamic>)
@@ -154,20 +149,27 @@ class _AddActivityState extends State<WriteActivity> {
     );
   }
 
-  void _filterLocationsByCategory() {
-    if (_selectedCategory == null) {
-      setState(() {
-        _closestLocations = _locations.take(_numberOfLocationsToShow).toList();
-      });
-    } else {
-      List<LocationData> filteredLocations = _locations
+  void _filterLocations() {
+    List<LocationData> filteredLocations = _locations;
+
+    // Filter by category
+    if (_selectedCategory != null) {
+      filteredLocations = filteredLocations
           .where((location) => location.category == _selectedCategory)
           .toList();
-      setState(() {
-        _closestLocations =
-            filteredLocations.take(_numberOfLocationsToShow).toList();
-      });
     }
+
+    // Filter by city name
+    if (_selectedCity != null) {
+      filteredLocations = filteredLocations
+          .where((location) => location.city == _selectedCity)
+          .toList();
+    }
+
+    setState(() {
+      _closestLocations =
+          filteredLocations.take(_numberOfLocationsToShow).toList();
+    });
   }
 
   void _updateNumberOfLocationsToShow(int numberOfLocations) {
@@ -187,39 +189,42 @@ class _AddActivityState extends State<WriteActivity> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-              height: 300,
-              child: FlutterMap(
-                options: MapOptions(
-                  center: latLng.LatLng(
-                      _currentPosition!.latitude, _currentPosition!.longitude),
-                  zoom: 13.0,
+            height: 300,
+            child: FlutterMap(
+              options: MapOptions(
+                center: latLng.LatLng(
+                  _currentPosition!.latitude,
+                  _currentPosition!.longitude,
                 ),
-                children: [
-                  TileLayer(
-                      urlTemplate:
-                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c']),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        width: 60.0,
-                        height: 60.0,
-                        point: latLng.LatLng(
-                          _currentPosition!.latitude,
-                          _currentPosition!.longitude,
-                        ),
-                        builder: (ctx) => Container(
-                          child: FlutterLogo(),
-                        ),
+                zoom: 13.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c'],
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      width: 60.0,
+                      height: 60.0,
+                      point: latLng.LatLng(
+                        _currentPosition!.latitude,
+                        _currentPosition!.longitude,
                       ),
-                    ],
-                  ),
-                ],
-              )),
+                      builder: (ctx) => Container(
+                        child: FlutterLogo(),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              //_currentLocation,
               _currentAddress,
               style: TextStyle(fontSize: 18),
             ),
@@ -241,7 +246,7 @@ class _AddActivityState extends State<WriteActivity> {
                     onChanged: (value) {
                       setState(() {
                         _selectedCategory = value;
-                        _filterLocationsByCategory();
+                        _filterLocations();
                       });
                     },
                     items: [
@@ -257,6 +262,120 @@ class _AddActivityState extends State<WriteActivity> {
                         value: 'ground',
                         child: Text('Ground'),
                       ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Text(
+                  'Select a city:',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: _selectedCity,
+                    hint: Text('Select a city'),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCity = value;
+                        _filterLocations();
+                      });
+                    },
+                    items: [
+                      DropdownMenuItem<String>(
+                        value: null,
+                        child: Text('All'),
+                      ),
+
+                      DropdownMenuItem<String>(
+                        value: 'Orleans',
+                        child: Text('Orleans'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Issoudun',
+                        child: Text('Issoudun'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Chateauroux',
+                        child: Text('Chateauroux'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Arrondissement de Tours',
+                        child: Text('Arrondissement de Tours'),
+                      ),
+
+                      DropdownMenuItem<String>(
+                        value: 'Montargis',
+                        child: Text('Montargis'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Loches',
+                        child: Text('Loches'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Tours',
+                        child: Text('Tours'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Bourges',
+                        child: Text('Bourges'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Blois',
+                        child: Text('Blois'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Chinon',
+                        child: Text('Chinon'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Chartres',
+                        child: Text('Chartres'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Romorantin-Lanthenay',
+                        child: Text('Romorantin-Lanthenay'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Pithiviers',
+                        child: Text('Pithiviers'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Vendome',
+                        child: Text('Vendome'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'La Chatre',
+                        child: Text('La Chatre'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Chateaudun',
+                        child: Text('Chateaudun'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Valencisse',
+                        child: Text('Valencisse'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Tauxigny-Saint-Bauld',
+                        child: Text('Tauxigny-Saint-Bauld'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Le Blanc',
+                        child: Text('Le Blanc'),
+                      ),
+                      DropdownMenuItem<String>(
+                        value: 'Chalette-sur-Loing',
+                        child: Text('Chalette-sur-Loing'),
+                      ),
+                      // Add more city options as needed
                     ],
                   ),
                 ),
