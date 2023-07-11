@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 DatabaseReference dbRef =
-    FirebaseDatabase.instance.ref().child("patient feedback");
+    FirebaseDatabase.instance.ref().child("patient_feedback");
 
 /// ***************** Intialization questions lists*********************
 QuizBrain quizBrain = QuizBrain();
@@ -68,6 +68,9 @@ class FeedbackPage extends StatefulWidget {
 
 class PatientFeedback extends State<FeedbackPage> {
   List<Icon> scoreKeeper = [];
+  final _formKey = GlobalKey<FormState>();
+  final _answers = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
     setState(() {
@@ -214,8 +217,10 @@ class PatientFeedback extends State<FeedbackPage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PatientProfile()));
+                showAlertDialog(context);
+
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => PatientProfile()));
               },
               child: Text('Finish'),
             )
@@ -224,4 +229,46 @@ class PatientFeedback extends State<FeedbackPage> {
       ],
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+  print('showAlertDialog called');
+  // set up the buttons
+  Widget startButton = TextButton(
+    child: Text("End"),
+    onPressed: () {
+      quizBrain.reset();
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PatientProfile()),
+      );
+      Navigator.of(context, rootNavigator: true).pop();
+    },
+  );
+  Widget cancelButton = TextButton(
+    child: Text("Cancel"),
+    onPressed: () {
+      Navigator.of(context, rootNavigator: true).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Notice"),
+    content: Text(
+        "Are you sure you want to leave this page? Your progress will not be saved."),
+    actions: [
+      startButton,
+      cancelButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
