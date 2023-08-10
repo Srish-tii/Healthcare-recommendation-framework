@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart' as latLng;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:rastreador/Patient/PatientHome/PractTime.dart';
 
 class LocationData {
   final String id;
@@ -43,6 +44,7 @@ class _AddActivityState extends State<WriteActivity> {
   String _currentAddress = "Fetching your current location...";
   Position? _currentPosition;
   String? _selectedCategory;
+  LocationData? _selectedActivity;
   String? _selectedCity;
 
   int _numberOfLocationsToShow = 250;
@@ -226,6 +228,7 @@ class _AddActivityState extends State<WriteActivity> {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               _currentAddress,
+              //_currentLocation
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -402,12 +405,25 @@ class _AddActivityState extends State<WriteActivity> {
               itemBuilder: (context, index) {
                 LocationData location = _closestLocations[index];
                 return ListTile(
-                  title: Text(location.address),
-                  subtitle: Text(
-                    'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}',
-                  ),
-                  // Add any other UI elements you want to display for each location
-                );
+                    title: Text(location.address),
+                    subtitle: Text(
+                      'Latitude: ${location.coords['lat']}, Longitude: ${location.coords['lng']}',
+                    ),
+                    onTap: () {
+                      setState(() {
+                        _selectedActivity = location;
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PractTime(
+                            selectedActivity: location,
+                          ),
+                        ),
+                      );
+                    }
+                    // Add any other UI elements you want to display for each location
+                    );
               },
             ),
           ),
