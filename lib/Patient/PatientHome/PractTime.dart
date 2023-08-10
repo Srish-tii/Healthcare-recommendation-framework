@@ -146,6 +146,11 @@ class _PractTimeState extends State<PractTime> {
                 } else {
                   print('No user is currently logged in.');
                 }
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PatientProfile()),
+                );
               },
               child: Text('OK'),
             ),
@@ -155,19 +160,6 @@ class _PractTimeState extends State<PractTime> {
     );
   }
 
-//   Future<void> _uploadToFirestore() async {
-//     try {
-//       await _firestore.collection('activities').add({
-//         'activityId': widget.selectedActivity?.id,
-//         'activityAddress': widget.selectedActivity?.address,
-//         'selectedDate': _selectedDate,
-//       });
-//       print('Data uploaded to Firestore successfully');
-//     } catch (e) {
-//       print('Error uploading data to Firestore: $e');
-//     }
-//   }
-// }
   Future<void> _uploadToFirestore(String patientId) async {
     try {
       await _firestore.collection('activities').add({
