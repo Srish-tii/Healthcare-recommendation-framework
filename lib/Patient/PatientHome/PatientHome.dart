@@ -77,8 +77,7 @@ class _Patient extends State<PatientProfile> {
                       return;
                     }
                     await _auth.signOut();
-                    final String uid = user.uid;
-                    // ignore: deprecated_member_use
+
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: const Text('Successfully signed out.'),
                     ));
@@ -545,91 +544,3 @@ class _Patient extends State<PatientProfile> {
         ),
       );
 }
-/*
-
-// ******************* Simple layout page *********************
-body : SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all((20.0)),
-            child : Form(
-              child : Column (
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  IconButton( icon: Icon(Icons.arrow_back_ios,
-                    color:Theme.of(context).primaryColor ,),
-                      onPressed: (){ Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=> MyApp()));}
-                  ),
-                  SizedBox(height : 10),
-                  Text ('Welcome,',style: TextStyle(fontStyle: FontStyle.italic),),
-                  SizedBox(height: 10),
-                  Container (
-                    child :Row(
-                      mainAxisAlignment : MainAxisAlignment.center ,
-                      children : [
-                        SizedBox(width: 5),
-                        Expanded(child: Padding (
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-                          child :  Image(
-                              image: AssetImage('assets/progress.png'),width:110,height:90),),),
-                        SizedBox(height: 10,),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> PatientProgress()));
-                        },
-                          child: Text("Consult progress"),
-                        ),
-                      ],),),
-                  Container (
-                    child :Row(
-                      mainAxisAlignment : MainAxisAlignment.center ,
-                      children : [
-                        SizedBox(width: 5),
-                        Expanded(child: Padding (
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-                          child :  Image(
-                              image: AssetImage('assets/Actfinished.png'),width:110,height:90),),),
-                        SizedBox(height: 10,),
-                        TextButton(onPressed: () {Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=> Practices()));
-                        },
-                          child: Text("Select Activity"),
-                        ),
-                      ],),),
-                  SizedBox(height: 30),
-                 Row(
-                   mainAxisAlignment : MainAxisAlignment.center ,
-                   children :[
-                   Text('Add new disease :'),
-                   SizedBox(width: 5),
-                   TextButton(onPressed: () {Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=> Disease()));
-                      },
-                      child: Text ('Disease'),
-                   ),],),
-                  SizedBox(width:30),
-                  Row (
-                    mainAxisAlignment : MainAxisAlignment.center ,
-                    children :[
-                      Text ('Give your Feedback :'),
-                  TextButton(onPressed: () {Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=> FeedbackPage()));
-                  },
-                    child: Text("Feedback"),
-                  ),],),
-                      SizedBox(width: 30,),
-                     Row (
-                         mainAxisAlignment : MainAxisAlignment.center ,
-                         children :[
-                      Text ('Update your data :'),
-                       TextButton(onPressed: () {Navigator.push(context,
-                               MaterialPageRoute(builder: (context)=> Register()));
-                           },
-                         child: Text ('Update'),
-                         ),],),
-         ], ),
-        ),
-      ),
-    ),),);
- */

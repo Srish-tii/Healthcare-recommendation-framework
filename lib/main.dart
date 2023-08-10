@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'Patient/Information.dart';
 import 'package:location/location.dart';
 import 'CommonWidgets/UserDescription.dart';
 import 'CommonWidgets/UserAccount.dart';
-import 'package:geolocator/geolocator.dart';
 
 Future<void> main() async {
   /// *************** Ensure Firebase Initialization ***************
