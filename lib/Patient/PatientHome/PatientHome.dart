@@ -7,6 +7,7 @@ import 'package:rastreador/Patient/PatientHome/Progress.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'AddAct.dart';
 import 'ListActivities.dart';
+import 'Scheduled.dart';
 import 'PractTime.dart';
 import '../../main.dart';
 import 'package:geolocator/geolocator.dart';
@@ -400,6 +401,49 @@ class _Patient extends State<PatientProfile> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.amberAccent,
+                                          fontSize: 24),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Card(
+                                color: Colors.blueGrey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Ink.image(
+                                      image: AssetImage('assets/sports.jpg'),
+                                      width: double.infinity,
+                                      height: 200,
+                                      colorFilter: new ColorFilter.mode(
+                                          Colors.black.withOpacity(0.5),
+                                          BlendMode.dstATop),
+                                      child: InkWell(onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ScheduledActivities()));
+                                      }),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Text(
+                                      'View Scheduled Activities',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.yellow[200],
                                           fontSize: 24),
                                     ),
                                   ],

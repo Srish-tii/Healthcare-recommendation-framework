@@ -74,7 +74,20 @@ class _PractTimeState extends State<PractTime> {
     );
   }
 
-  void _showConfirmationDialog() {
+  void _showConfirmationDialog() async {
+    List<DateTime> scheduledDates =
+        await _fetchScheduledDates(_auth.currentUser!.uid);
+
+    if (scheduledDates.contains(_selectedDate)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'This date already has a scheduled activity. Please select again.'),
+          duration: Duration(seconds: 5),
+        ),
+      );
+      return;
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -149,5 +162,21 @@ class _PractTimeState extends State<PractTime> {
     } catch (e) {
       print('Error uploading data to Firestore: $e');
     }
+  }
+
+  Future<List<DateTime>> _fetchScheduledDates(String patientId) async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('activities')
+        .where('patientId', isEqualTo: patientId)
+        .get();
+
+    List<DateTime> scheduledDates = [];
+    for (var doc in querySnapshot.docs) {
+      DateTime? date = (doc['selectedDate'] as Timestamp?)?.toDate();
+      if (date != null) {
+        scheduledDates.add(DateTime(date.year, date.month, date.day));
+      }
+    }
+    return scheduledDates;
   }
 }
